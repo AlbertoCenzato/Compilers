@@ -6,64 +6,27 @@ struct fract {
 	int den;
 };
 
+typedef struct fract fract;
 
-int mCD(int n1, int n2) {
-    if (n2==0)
-        return n1;
-    else
-        return mCD(n2, n1%n2);
-}
 
-struct fract  fractSum(struct fract  fr1, struct fract  fr2) {
-	struct fract result;
-	int den = fr1.den * fr2.den;
-	int num = fr1.num*fr2.den + fr2.num*fr1.den;
-	int m = mCD(num, den);
-	result.num = num / m;
-	result.den = den / m;
-	return result;
-}
+int mCD(int n1, int n2);
 
-struct fract  fractSub(struct fract  fr1, struct fract  fr2) {
-	fr2.num = -fr2.num;
-	return fractSum(fr1,fr2);
-}
+fract  fractSum(fract  fr1, fract  fr2);
 
-struct fract  fractMul(struct fract  fr1, struct fract  fr2) {
-	struct fract  result;
-	int num = fr1.num * fr2.num;
-	int den = fr1.den * fr2.den;
-	int m = mCD(num, den);
-	result.num = num / m;
-	result.den = den / m;
-	return result;
-}
+fract  fractSub(fract  fr1, fract  fr2);
 
-struct fract  fractDiv(struct fract  fr1, struct fract fr2) {
-	int tmp = fr2.num;
-	fr2.num = fr2.den;
-	fr2.den = tmp;
-	return fractMul(fr1,fr2);
-}
+fract  fractMul(fract  fr1, fract  fr2);
 
-int fractLT(struct fract  f1, struct fract  f2) {
-	return f1.num*f2.den < f2.num*f1.den;
-}
+fract  fractDiv(fract  fr1, fract fr2);
 
-int fractGT(struct fract f1, struct fract  f2) {
-	return f1.num*f2.den > f2.num*f1.den;
-}
+int fractLT(fract  f1, fract  f2);
 
-int fractLE(struct fract  f1, struct fract  f2) {
-	return f1.num*f2.den <= f2.num*f1.den;
-}
+int fractGT(fract f1, fract  f2);
 
-int fractGE(struct fract  f1, struct fract  f2) {
-	return f1.num*f2.den >= f2.num*f1.den;
-}
+int fractLE(fract  f1, fract  f2);
 
-void printFract(struct fract fr) {
-	printf("[%d|%d]",fr.num,fr.den);
-}
+int fractGE(fract  f1, fract  f2);
 
-#endif
+void printFract(fract fr);
+
+#endif // FRACT_H_
