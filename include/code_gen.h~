@@ -3,7 +3,7 @@
 
 #include "list.h"	// TODO: move this include in code_gen.c and use a forward declaration
 
-int stringLen(const char* str);
+int stringLen(char* str);
 
 char* newVar();
 

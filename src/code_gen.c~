@@ -95,10 +95,10 @@ TAC* genMCD(const char* op1, const char* op2) {
 *			use 0 for subtraction, everything else for the addition.
 */
 Node* genFractSumSub(Node* op1, Node* op2, int sum) {
-	char* num1 = findSecToLast(op1)->val->risul;
-	char* den1 = findLast(op1)->val->risul;
-	char* num2 = findSecToLast(op2)->val->risul;
-	char* den2 = findLast(op2)->val->risul;
+	char* num1 = findSecToLast(op1)->risul;
+	char* den1 = findLast(op1)->risul;
+	char* num2 = findSecToLast(op2)->risul;
+	char* den2 = findLast(op2)->risul;
 
 	// t1 = num1 * den2
 	TAC *tac = genMul(num1, den2);
@@ -154,10 +154,10 @@ Node* genFractSub(Node* op1, Node* op2) {
 }
 
 Node* genFractMul(Node* op1, Node* op2) {
-	char* num1 = findSecToLast(op1)->val->risul;
-	char* den1 = findLast(op1)->val->risul;
-	char* num2 = findSecToLast(op2)->val->risul;
-	char* den2 = findLast(op2)->val->risul;
+	char* num1 = findSecToLast(op1)->risul;
+	char* den1 = findLast(op1)->risul;
+	char* num2 = findSecToLast(op2)->risul;
+	char* den2 = findLast(op2)->risul;
 
 	// num_ = num1 * num2
 	TAC* tac = genMul(num1, num2);
@@ -191,10 +191,10 @@ Node* genFractMul(Node* op1, Node* op2) {
 }
 
 Node* genFractDiv(Node* op1, Node* op2) {
-	char* num1 = findSecToLast(op1)->val->risul;
-	char* den1 = findLast(op1)->val->risul;
-	char* num2 = findSecToLast(op2)->val->risul;
-	char* den2 = findLast(op2)->val->risul;
+	char* num1 = findSecToLast(op1)->risul;
+	char* den1 = findLast(op1)->risul;
+	char* num2 = findSecToLast(op2)->risul;
+	char* den2 = findLast(op2)->risul;
 
 	// num_ = num1 * den2
 	TAC* tac = genMul(num1, den2);
