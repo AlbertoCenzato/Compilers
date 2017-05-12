@@ -1,6 +1,8 @@
-#include "../include/list.h"
+#include "list.h"
 
 #include <stdlib.h>
+
+#include "node.h"
 
 struct List {
 	Node* head;

@@ -1,7 +1,13 @@
 #ifndef NODE_H_
 #define NODE_H_
 
-struct ThreeAddressCode;
+struct ThreeAddressCode {
+	char* risul;
+	char* op1;
+	char* op;
+	char* op2;
+};
+
 typedef struct ThreeAddressCode TAC;
 
 struct Node {

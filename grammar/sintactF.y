@@ -2,10 +2,8 @@
 #include <ctype.h> 
 #include <stdio.h> 
 
-#include "include/fract.h"
-#include "include/symbol_table.h"
-#include "include/lista.h"
-#include "include/code_gen.h"
+#include "fract.h"
+#include "symbol_table.h"
 
 int yylex();
 void yyerror(char *s);

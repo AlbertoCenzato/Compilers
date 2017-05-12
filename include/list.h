@@ -1,7 +1,11 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-#include "Node.h"
+struct ThreeAddressCode;
+typedef struct ThreeAddressCode TAC;
+
+struct Node;
+typedef struct Node Node;
 
 struct List;	// forward declaration to keep private struct members
 

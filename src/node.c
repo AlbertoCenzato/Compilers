@@ -2,13 +2,6 @@
 
 #include <stdlib.h>
 
-struct ThreeAddressCode {
-	char* risul;
-	char* op1;
-	char* op;
-	char* op2;
-};
-
 Node* createNode(TAC* tac) {
 	Node* newNode = malloc(sizeof(Node));
 	newNode->val = tac;
