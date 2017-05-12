@@ -3,7 +3,7 @@
 
 #include "Node.h"
 
-struct List;	// forward declaration to kkep private struct members
+struct List;	// forward declaration to keep private struct members
 
 typedef struct List List;	// typedef for ease of use
 

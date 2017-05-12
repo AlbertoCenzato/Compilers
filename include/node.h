@@ -1,11 +1,10 @@
 #ifndef NODE_H_
 #define NODE_H_
 
-struct TAC;
-typedef struct TAC TAC;
+struct ThreeAddressCode;
+typedef struct ThreeAddressCode TAC;
 
 struct Node {
-	//struct List * prev;
 	TAC* val;
 	struct Node* next;
 };

@@ -5,8 +5,6 @@
 
 int stringLen(const char* str);
 
-//char* newVar();
-
 /**
  *	Generates three address code for addition of 
  * operand op1 and operand op2
@@ -41,24 +39,24 @@ TAC* genMCD(const char* op1, const char* op2);
  * Generates three address code instructions for addition
  * of fract op1 and fract op2.
  */
-Node* genFractSum(Node* op1, Node* op2);
+List* genFractSum(List* op1, List* op2);
 
 /**
 * Generates three address code instructions for subtraction
 * of fract op1 and fract op2.
 */
-Node* genFractSub(Node* op1, Node* op2);
+List* genFractSub(List* op1, List* op2);
 
 /**
 * Generates three address code instructions for multiplication
 * of fract op1 and fract op2.
 */
-Node* genFractMul(Node* op1, Node* op2);
+List* genFractMul(List* op1, List* op2);
 
 /**
 * Generates three address code instructions for division
 * of fract op1 and fract op2.
 */
-Node* genFractDiv(Node* op1, Node* op2);
+List* genFractDiv(List* op1, List* op2);
 
 #endif 	// CODE_GEN_H_

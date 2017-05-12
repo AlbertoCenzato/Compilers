@@ -9,7 +9,9 @@ struct List {
 };
 
 List* listAlloc() {
-	return (List*) malloc(sizeof(List));
+	List *newList = (List*) malloc(sizeof(List));
+	newList->length = 0;
+	return newList;
 }
 
 void listDelete(List *list) {
@@ -25,26 +27,64 @@ void listDelete(List *list) {
 }
 
 Node* listFindLast(List* list) {
-	return list->secToLast->next;
+	if (list->length > 1)
+		return list->secToLast->next;
+	if (list->length == 1)
+		return list->head;
+	return NULL;	
 }
 
 Node* listFindSecToLast(List* list) {
-	return list->secToLast;
+	if (list->length > 1)
+		return list->secToLast;
+	return NULL;
 }
 
-void  listAdd(List *list, TAC *tac) {
-	Node *last = list->secToLast->next;
+void listAdd(List *list, TAC *tac) {
+
 	Node *newNode = createNode(tac);
-	last->next = newNode;
-	list->secToLast = last;
+
+	if (list->length > 1) {
+		Node *last = list->secToLast->next;
+		last->next = newNode;
+		list->secToLast = last;
+	}
+	else if (list->length == 1) {
+		list->head->next = newNode;
+		list->secToLast = list->head;
+	}
+	else {
+		list->head = newNode;
+	}
+
 	list->length++;
 }
 
 void listConcat(List *list1, List *list2) {
-	Node *last1 = list1->secToLast->next;
-	last1->next = list2->head;
-	list1->secToLast = list2->secToLast;
-	list1->length += list2->length;
+
+	if (list1->length > 1) {
+		Node *last = list1->secToLast->next;
+		last->next = list2->head;
+		if (list2->length > 1)
+			list1->secToLast = list2->secToLast;
+		else if (list2->length == 1)
+			list1->secToLast = list1->secToLast->next;
+		// if list2->length == 0 no action needed
+		list1->length += list2->length;
+	}
+	else if (list1->length == 1) {
+		list1->head->next = list2->head;
+		if (list2->length > 1)
+			list1->secToLast = list2->secToLast;
+		else if (list2->length == 1)
+			list1->secToLast = list1->head;
+		// if list2->length == 0 no action needed
+		list1->length += list2->length;
+	}
+	else {
+		free(list1);
+		list1 = list2;
+	}
 }
 
 

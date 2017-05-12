@@ -1,5 +1,7 @@
 #include "node.h"
 
+#include <stdlib.h>
+
 struct ThreeAddressCode {
 	char* risul;
 	char* op1;
