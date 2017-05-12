@@ -38,7 +38,7 @@ TAC* genDiv(char* op1, char* op2);
  *	Generates three address code for MCD of 
  * operand op1 and operand op2
  */
-TAC* genMCD(const char* op1, const char* op2);
+TAC* genMCD(char* op1, char* op2);
 
 
 #endif 	// CODE_GEN_H_

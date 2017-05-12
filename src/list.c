@@ -1,8 +1,10 @@
 #include "list.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "node.h"
+#include "code_gen.h"
 
 struct List {
 	Node* head;
@@ -16,13 +18,13 @@ List* listAlloc() {
 	return newList;
 }
 
-void listDelete(List *list) {
+void listFree(List *list) {
 	Node *head;
 	Node *next = list->head;
 	while (next != NULL) {
 		head = next;
 		next = next->next;
-		deleteNode(head);
+		nodeFree(head);
 	}
 
 	free(list);
@@ -44,7 +46,7 @@ Node* listFindSecToLast(List* list) {
 
 void listAdd(List *list, TAC *tac) {
 
-	Node *newNode = createNode(tac);
+	Node *newNode = nodeAlloc(tac);
 
 	if (list->length > 1) {
 		Node *last = list->secToLast->next;
@@ -90,33 +92,37 @@ void listConcat(List *list1, List *list2) {
 }
 
 
-
-/*
 int main() {
 
 	//provo la lista
-	TAC *prova = malloc(sizeof(TAC));
-	TAC *prova1 = malloc(sizeof(TAC));
-	TAC *prova2 = malloc(sizeof(TAC));
-	TAC *prova3 = malloc(sizeof(TAC));
+	char op1[] = "10";
+	char op2[] = "5";
+	char two[] = "2";
 
-	prova->risul = "000";
-	prova1->risul = "001";
-	prova2->risul = "002";
-	prova3->risul = "003";
+	TAC *prova = genAdd(op1, op2);
+	TAC *prova1 = genDiv(prova->risul, two);
+	TAC *prova2 = genMul(prova1->risul, op2);
 
-	Node *head = createNode(prova);
+	List *list1 = listAlloc();
+	listAdd(list1, prova);
 
-	printf("----->%s\n", (head->val)->risul);
+	tacPrint(list1->head->val);
 
-	addToList(head, prova1);
-	printf("----->%s\n", (findLast(head)->val)->risul);
-	addToList(head, prova2);
-	printf("----->%s\n", (findLast(head)->val)->risul);
-	addToList(head, prova3);
-	printf("----->%s\n", (findLast(head)->val)->risul);
+	listAdd(list1, prova1);
+	tacPrint(listFindLast(list1)->val);
+	listAdd(list1, prova2);
+	tacPrint(listFindLast(list1)->val);
 
-	deleteList(head);
+	List *list2 = listAlloc();
+	TAC *prova4 = genMCD(prova->risul, op2);
+	listAdd(list2, prova4);
+
+	tacPrint(listFindLast(list2)->val);
+
+	listConcat(list1, list2);
+
+	tacPrint(listFindLast(list1)->val);
+
+	listFree(list1);
 
 }
-*/

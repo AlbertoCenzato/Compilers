@@ -13,7 +13,7 @@ typedef struct List List;	// typedef for ease of use
 
 List* listAlloc();
 
-void listDelete(List *list);
+void listFree(List *list);
 
 //funzione per trovare l'ultimo nodo della lista
 Node* listFindLast(List* list);

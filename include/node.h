@@ -10,6 +10,9 @@ struct ThreeAddressCode {
 
 typedef struct ThreeAddressCode TAC;
 
+void tacPrint(TAC* tac);
+
+
 struct Node {
 	TAC* val;
 	struct Node* next;
@@ -18,9 +21,9 @@ struct Node {
 typedef struct Node Node;
 
 //funzione per creare un nodo della lista
-Node* createNode(TAC* tac);
+Node* nodeAlloc(TAC* tac);
 
-void deleteNode(Node *node);
+void nodeFree(Node *node);
 
 #endif // NODE_H_
 
