@@ -5,12 +5,7 @@
 
 int stringLen(const char* str);
 
-char* newVar();
-
-/**
- *	Generates three address code for a generic binary operation
- */
-TAC* genOp(char* op1, char* op2, char* operand);
+//char* newVar();
 
 /**
  *	Generates three address code for addition of 
@@ -43,25 +38,27 @@ TAC* genDiv(char* op1, char* op2);
 TAC* genMCD(const char* op1, const char* op2);
 
 /**
- *	Generates three address code instructions for addition
- * or subtraction of fract op1 and fract op2.
- * @op1: list of instructions for the computation of the first fract.
- * @op2: list of instructions for the computation of the second fract.
- * @sum: flag stating if the two fracts must be added or subtracted,
- *			use 0 for subtraction, everything else for the addition.
- */
-Node* genFractSumSub(Node* op1, Node* op2, int sum);
-
-/**
  * Generates three address code instructions for addition
- * or subtraction of fract op1 and fract op2.
+ * of fract op1 and fract op2.
  */
 Node* genFractSum(Node* op1, Node* op2);
 
+/**
+* Generates three address code instructions for subtraction
+* of fract op1 and fract op2.
+*/
 Node* genFractSub(Node* op1, Node* op2);
 
+/**
+* Generates three address code instructions for multiplication
+* of fract op1 and fract op2.
+*/
 Node* genFractMul(Node* op1, Node* op2);
 
+/**
+* Generates three address code instructions for division
+* of fract op1 and fract op2.
+*/
 Node* genFractDiv(Node* op1, Node* op2);
 
 #endif 	// CODE_GEN_H_

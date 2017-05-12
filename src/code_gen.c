@@ -13,6 +13,16 @@ int stringLen(const char* str) {
 	return count;
 }
 
+char* stringAlloc(const char* str) {
+	char* newString = malloc()
+}
+
+void stringFree(char* str) {
+	
+}
+
+
+
 char* newVar() {
 
 	// count number of digits of varCount
@@ -27,7 +37,9 @@ char* newVar() {
 	return var;
 }
 
-
+/**
+*	Generates three address code for a generic binary operation
+*/
 TAC* genOp(char* op1, char* op2, char* operand) {
 	TAC *tac = (TAC*) malloc(sizeof(TAC));
 	char* result = newVar();
@@ -69,21 +81,9 @@ TAC* genDiv(char* op1, char* op2) {
 
 
 TAC* genMCD(const char* op1, const char* op2) {
-
-	TAC *tac = (TAC*) malloc(sizeof(TAC));
-	char* result = newVar();
-	tac->risul = result;
-	int lenT3 = stringLen(op1);
-	int lenT4 = stringLen(op2);
-	int op1Len = 4 + lenT3 + 1 + lenT4 + 2;
-	tac->op1 = (char*) malloc(op1Len * sizeof(char));
-	strcpy(tac->op1, "mCD(");
-	strcat(tac->op1, op1);
-	strcat(tac->op1, ",");
-	strcat(tac->op1, op2);
-	strcat(tac->op1, ")");
-
-	return tac;
+	char* operand = (char*) malloc(3 * sizeof(char));
+	strcpy(operand, "MCD");
+	return genOp(op1,operand,op2);
 }
 
 /**
@@ -112,7 +112,7 @@ Node* genFractSumSub(Node* op1, Node* op2, int sum) {
 
 	// t3 = t1 +- t2
 	if (sum != 0)
-		tac = genSum(t1, t2);
+		tac = genAdd(t1, t2);
 	else
 		tac = genSub(t1, t2);
 	char* t3 = tac->risul;

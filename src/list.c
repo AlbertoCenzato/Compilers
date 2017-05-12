@@ -2,75 +2,52 @@
 
 #include <stdlib.h>
 
-Node* createNode(TAC* tac) {
-	Node* newNode = malloc(sizeof(Node));
-	newNode->val = tac;
-	//new->prev = NULL;
-	newNode->next = NULL;
-	return newNode;
+struct List {
+	Node* head;
+	Node* secToLast;
+	int length;
+};
+
+List* listAlloc() {
+	return (List*) malloc(sizeof(List));
 }
 
-Node* findLast(Node* l) {
-
-	if (l->next == NULL)
-		return l;
-	else
-		return findLast(l->next);
-}
-
-Node* findSecToLast(Node* node) {
-
-	if (node == NULL)
-		return NULL;
-
-	Node *secToLast = NULL;
-	Node *last = node;
-	while (last->next != NULL) {
-		secToLast = last;
-		last = last->next;
+void listDelete(List *list) {
+	Node *head;
+	Node *next = list->head;
+	while (next != NULL) {
+		head = next;
+		next = next->next;
+		deleteNode(head);
 	}
 
-	return secToLast;
+	free(list);
 }
 
-void  addToList(Node *head, TAC *tac) {
-	//Node* p;
-	//Node* coda;
-	Node *p = findLast(head);
-	Node *newNode = (createNode(tac));
-	p->next = newNode;
-	//p->next->prev = p;   
+Node* listFindLast(List* list) {
+	return list->secToLast->next;
 }
 
-void concat(Node *lista1, Node *lista2) {
-	Node *p = findLast(lista1);
-	p->next = lista2;
+Node* listFindSecToLast(List* list) {
+	return list->secToLast;
 }
 
-void deleteTAC(TAC *tac) {
-	if (tac == NULL)
-		return;
-	free(tac->op);
-	free(tac->op1);
-	free(tac->op2);
-	free(tac->risul);
-	free(tac);
+void  listAdd(List *list, TAC *tac) {
+	Node *last = list->secToLast->next;
+	Node *newNode = createNode(tac);
+	last->next = newNode;
+	list->secToLast = last;
+	list->length++;
 }
 
-void deleteNode(Node *node) {
-	if (node == NULL)
-		return;
-	deleteTAC(node->val);
-	free(node);
+void listConcat(List *list1, List *list2) {
+	Node *last1 = list1->secToLast->next;
+	last1->next = list2->head;
+	list1->secToLast = list2->secToLast;
+	list1->length += list2->length;
 }
 
-void deleteList(Node *head) {
-	Node *next = head->next;
-	deleteNode(head);
-	if (next == NULL)
-		return;
-	deleteList(next);
-}
+
 
 /*
 int main() {

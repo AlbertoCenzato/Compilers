@@ -1,48 +1,25 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
+#include "Node.h"
 
-struct ThreeAddressCode {
-	char* risul;
-	char* op1;
-	char* op;
-	char* op2;
-};
+struct List;	// forward declaration to kkep private struct members
 
-typedef struct ThreeAddressCode TAC;
+typedef struct List List;	// typedef for ease of use
 
+List* listAlloc();
 
-struct Node { 
-	//struct List * prev;
-	TAC* val;
-	struct Node* next;
-};
-
-typedef struct Node Node;
-
-
-//funzione per creare un nodo della lista
-Node* createNode(TAC* tac);
+void listDelete(List *list);
 
 //funzione per trovare l'ultimo nodo della lista
-Node* findLast(Node* l);
+Node* listFindLast(List* list);
 
-Node* findSecToLast(Node* node);
+Node* listFindSecToLast(List* list);
 
 //funzione aggiungere elemento in coda
-void  addToList(Node *head, TAC *tac);
-
+void  listAdd(List *list, TAC *tac);
 
 //unire due liste in cui l2 vene attaccata alla coda di l1
-void concat(Node *lista1, Node *lista2);
-
-void deleteTAC(TAC *tac);
-
-void deleteNode(Node *node);
-
-void deleteList(Node *head);
+void listConcat(List *list1, List *list2);
 
 #endif // LIST_H_

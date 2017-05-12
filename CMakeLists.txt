@@ -39,6 +39,7 @@ add_executable(${PROJECT_NAME}
 	src/fract.c
 	src/list.c
 	src/symbol_table.c
+	src/node.c
 )
 
 ## Add cmake target dependencies of the executable
