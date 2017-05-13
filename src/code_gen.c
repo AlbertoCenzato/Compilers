@@ -87,3 +87,11 @@ TAC* genMCD(char* op1, char* op2) {
 	strcpy(operand, "MCD");
 	return genOp(op1,operand,op2);
 }
+
+/*
+TAC* gensetFractVar(char* op1, char* op2) {
+	char* operand = (char*) malloc(3 * sizeof(char));
+	strcpy(operand, "setFractVar");
+	return genOp(op1,operand,op2);
+	}
+*/

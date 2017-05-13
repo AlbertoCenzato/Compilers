@@ -16,8 +16,8 @@ Node * head;
 
 %union{
 
-	fract fr;
-
+	//fract fr;
+    list * fr;
 	int   bool;
 	char* str;
  
@@ -44,8 +44,8 @@ Node * head;
 lines : lines expr  '\n'   { printFract($2); }
       | lines bexpr '\n'   { printf("%d\n", $2); }
       | lines comp  '\n'	{ printf("%d\n", $2); }
-		| lines declar '\n'  {;}
-		| lines assign '\n'  {;}
+	  | lines declar '\n'  {;}
+	  | lines assign '\n'  {;}
       | /* empty */
       ;
 
@@ -82,10 +82,11 @@ declar : KW_FRACT ID ';' { addFractVar($2);}
        ;
 		 
 // TODO: risolvere problema di type checking
-assign : ID '=' expr  ';' { TAC * tac = malloc(sizeof(TAC));	   
-			setFractVar($1, $3);}	 
+assign : ID '=' expr  ';' { //TAC * tac = malloc(sizeof(TAC));
+                               setFractVar($1, $3);}
        ;
 %%
+
 
 
 

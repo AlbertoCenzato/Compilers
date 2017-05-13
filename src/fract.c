@@ -208,3 +208,23 @@ List* genFractDiv(List* op1, List* op2) {
 
 	return op1;
 }
+
+
+//new method for updating symboltable
+
+setFractVar(char * id, List * expr){
+char* num = listFindSecToLast(expr)->val->risul;
+char* den = listFindLast(expr)->val->risul;
+
+
+
+//t1 = setFractVar(id,num)
+TAC * tac = gensetNumVar(id,num);
+	listAdd(expr, tac);
+
+
+//t2 = setFratVar(id, den)
+tac = gensetDenVar(id,den);
+	listAdd(expr, tac);
+
+}

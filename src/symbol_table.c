@@ -89,3 +89,15 @@ int getBoolVar(char *id) {
 	}
 	return tmp->value.bool;
 }
+
+void setNumVar(char *id, int value) {
+	variable *tmp;
+	tmp = findVar(id);
+	tmp->value.fr.num = value;
+}
+
+void setDenVar(char *id, int value) {
+	variable *tmp;
+	tmp = findVar(id);
+	tmp->value.fr.den = value;
+}
