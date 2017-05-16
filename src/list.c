@@ -1,10 +1,10 @@
-#include "list.h"
+#include "../include/list.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "node.h"
-#include "code_gen.h"
+#include "../include/node.h"
+#include "../include/code_gen.h"
 
 struct List {
 	Node* head;
