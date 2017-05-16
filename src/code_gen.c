@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "node.h"
+#include "list.h"
 
 int varCount = 1;
 
@@ -37,6 +38,12 @@ char* newVar() {
 	sprintf(var, "t%d", varCount);	// sprintf always null terminates the string
 	++varCount;
 	return var;
+}
+
+TAC* genDecl() {
+	TAC* tac = (TAC*) malloc(sizeof(TAC));
+	tac->risul = newVar();
+	return tac;
 }
 
 /**

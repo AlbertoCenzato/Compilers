@@ -36,27 +36,33 @@ struct List;
 typedef struct List List;
 
 /**
+* Generates three address code for the declaration
+* of a new fract variable
+*/
+List* fractGenDecl();
+
+/**
 * Generates three address code instructions for addition
 * of fract op1 and fract op2.
 */
-List* genFractSum(List* op1, List* op2);
+List* fractGenSum(List* op1, List* op2);
 
 /**
 * Generates three address code instructions for subtraction
 * of fract op1 and fract op2.
 */
-List* genFractSub(List* op1, List* op2);
+List* fractGenSub(List* op1, List* op2);
 
 /**
 * Generates three address code instructions for multiplication
 * of fract op1 and fract op2.
 */
-List* genFractMul(List* op1, List* op2);
+List* fractGenMul(List* op1, List* op2);
 
 /**
 * Generates three address code instructions for division
 * of fract op1 and fract op2.
 */
-List* genFractDiv(List* op1, List* op2);
+List* fractGenDiv(List* op1, List* op2);
 
 #endif // FRACT_H_

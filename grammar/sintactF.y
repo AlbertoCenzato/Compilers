@@ -78,12 +78,14 @@ comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
      | expr GE expr { $$ =  fractGE($1,$3); }
      ;
 	  
-declar : KW_FRACT ID ';' { addFractVar($2);}
+declar : KW_FRACT ID ';' { List* list = genFractDecl();
+						   addFractVar($2);
+						   setFractVar($2, list->head->risul, list->head->next->risul); }
        ;
 		 
 // TODO: risolvere problema di type checking
 assign : ID '=' expr  ';' { TAC * tac = malloc(sizeof(TAC));	   
-			setFractVar($1, $3);}	 
+						setFractVar($1, $3);}	 
        ;
 %%
 

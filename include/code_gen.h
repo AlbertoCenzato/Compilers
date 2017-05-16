@@ -11,6 +11,11 @@ typedef struct List List;
 int stringLen(const char* str);
 
 /**
+ *	Generates three address code for variable declaration
+ */
+TAC* genDecl();
+
+/**
  *	Generates three address code for addition of 
  * operand op1 and operand op2
  */

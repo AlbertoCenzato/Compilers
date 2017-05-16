@@ -3,6 +3,7 @@
 #include "node.h"
 #include "list.h"
 #include "code_gen.h"
+#include <stdlib.h>
 
 /*
 int mCD(int n1, int n2) {
@@ -65,6 +66,15 @@ void printFract(fract fr) {
 }
 */
 
+
+List* fractGenDecl() {
+	List* list = listAlloc();
+	listAdd(list, genDecl());
+	listAdd(list, genDecl());
+
+	return list;
+}
+
 /**
 *	Generates three address code instructions for addition
 * or subtraction of fract op1 and fract op2.
@@ -73,7 +83,7 @@ void printFract(fract fr) {
 * @sum: flag stating if the two fracts must be added or subtracted,
 *			use 0 for subtraction, everything else for the addition.
 */
-List* genFractSumSub(List* op1, List* op2, int sum) {
+List* fractGenSumSub(List* op1, List* op2, int sum) {
 	char* num1 = listFindSecToLast(op1)->val->risul;
 	char* den1 = listFindLast(op1)->val->risul;
 	char* num2 = listFindSecToLast(op2)->val->risul;
@@ -125,15 +135,15 @@ List* genFractSumSub(List* op1, List* op2, int sum) {
 }
 
 
-List* genFractSum(List* op1, List* op2) {
-	return genFractSumSub(op1, op2, 1);
+List* fractGenSum(List* op1, List* op2) {
+	return fractGenSumSub(op1, op2, 1);
 }
 
-List* genFractSub(List* op1, List* op2) {
-	return genFractSumSub(op1, op2, 0);
+List* fractGenSub(List* op1, List* op2) {
+	return fractGenSumSub(op1, op2, 0);
 }
 
-List* genFractMul(List* op1, List* op2) {
+List* fractGenMul(List* op1, List* op2) {
 	char* num1 = listFindSecToLast(op1)->val->risul;
 	char* den1 = listFindLast(op1)->val->risul;
 	char* num2 = listFindSecToLast(op2)->val->risul;
@@ -171,7 +181,7 @@ List* genFractMul(List* op1, List* op2) {
 	return op1;
 }
 
-List* genFractDiv(List* op1, List* op2) {
+List* fractGenDiv(List* op1, List* op2) {
 	char* num1 = listFindSecToLast(op1)->val->risul;
 	char* den1 = listFindLast(op1)->val->risul;
 	char* num2 = listFindSecToLast(op2)->val->risul;

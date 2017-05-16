@@ -1,6 +1,8 @@
 #include "../include/symbol_table.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 variable *mySymbolTable = NULL;
 
@@ -11,7 +13,6 @@ void addFractVar(char *id) {
 	if (tmp == NULL) {
 		tmp = (variable*) malloc(sizeof(variable));
 		tmp->id = id;
-		//tmp->value = 0;
 		tmp->type = TYPE_FRACT;
 		HASH_ADD_KEYPTR(hh, mySymbolTable, tmp->id, strlen(tmp->id), tmp);	// gives ownership of id to mySymbolTable
 	}
@@ -21,6 +22,7 @@ void addFractVar(char *id) {
 	}
 }
 
+/*
 void addBoolVar(char *id) {
 	variable *tmp;
 	HASH_FIND_STR(mySymbolTable, id, tmp);
@@ -36,29 +38,33 @@ void addBoolVar(char *id) {
 		exit(-1);
 	}
 }
+*/
 
-
+/*
 variable* findVar(char *id) {
 	variable *tmp;
 	HASH_FIND_STR(mySymbolTable, id, tmp);
-	if (tmp == NULL) {
+	if (tmp == NULL) {								// TODO: move this in setFractVar
 		printf("ERROR: variable %s is not defined\n", id);
 		exit(-1);
 	}
 	return tmp;
 }
+*/
 
-void setFractVar(char *id, struct fract value) {
-	variable *tmp;
-	tmp = findVar(id);
-	tmp->value.fr = value;
+void setFractVar(char *id, char *num, char *den) {
+	variable *tmp = getVar(id);
+	tmp->num = num;
+	tmp->den = den;
 }
 
+/*
 void setBoolVar(char *id, int value) {
 	variable *tmp;
 	tmp = findVar(id);
 	tmp->value.bool = value;
 }
+*/
 
 variable* getVar(char *id) {
 	variable *tmp;
@@ -70,6 +76,7 @@ variable* getVar(char *id) {
 	return tmp;
 }
 
+/*
 struct fract getFractVar(char *id) {
 	variable *tmp;
 	tmp = getVar(id);
@@ -79,7 +86,9 @@ struct fract getFractVar(char *id) {
 	}
 	return tmp->value.fr;
 }
+*/
 
+/*
 int getBoolVar(char *id) {
 	variable *tmp;
 	tmp = getVar(id);
@@ -89,3 +98,4 @@ int getBoolVar(char *id) {
 	}
 	return tmp->value.bool;
 }
+*/
