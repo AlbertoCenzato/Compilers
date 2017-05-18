@@ -3,12 +3,40 @@
 #include "tac.h"
 #include "list.h"
 #include "code_gen.h"
+#include <stdlib.h>
 
+void fractFromList(List* list, Fract* fract) {
+	fract->num = listGetSecToLast(list)->risul;
+	fract->den = listGetLast(list)->risul;
+}
 
 List* fractGenDecl() {
 	List* list = listAlloc();
 	listAdd(list, genDecl());
 	listAdd(list, genDecl());
+
+	return list;
+}
+
+
+// TODO: improve this function
+List* fractGenAssign(Fract* fract, List* list) {
+	List* newList = listAlloc();
+	//Fract id = getFractVar($1);
+	Fract* fr2 = (Fract*) malloc(sizeof(Fract));
+	fractFromList(list, fr2);
+
+	TAC* tac = tacAlloc();
+	tac->risul = fract->num;
+	tac->op1 = fr2->num;
+	listAdd(newList, tac);
+
+	tac = tacAlloc();
+	tac->risul = fract->den;
+	tac->op1 = fr2->den;
+	listAdd(newList, tac);
+
+	listConcat(list, newList);
 
 	return list;
 }

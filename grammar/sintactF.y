@@ -83,8 +83,8 @@ declar : KW_FRACT ID ';' { List* list = genFractDecl();
 						   setFractVar($2, list->head->risul, list->head->next->risul); }
        ;
 		 
-// TODO: risolvere problema di type checking
-assign : ID '=' expr  ';' { char* num = listGetSecToLast($3).}
+assign : ID '=' expr  ';' { Fract* fr = getFractVar($1);
+							$$ = fractGenAssign(fr, $3); }
        ;
 %%
 
