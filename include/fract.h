@@ -32,8 +32,15 @@ void printFract(fract fr);
 */
 
 
-struct List;
+struct List;	// forward declaration
 typedef struct List List;
+
+struct Fract {
+	char* num;
+	char* den;
+};
+
+typedef struct Fract Fract;
 
 /**
 * Generates three address code for the declaration

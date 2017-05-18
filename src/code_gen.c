@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "node.h"
-#include "list.h"
+#include "tac.h"
 
 int varCount = 1;
 
@@ -41,7 +40,7 @@ char* newVar() {
 }
 
 TAC* genDecl() {
-	TAC* tac = (TAC*) malloc(sizeof(TAC));
+	TAC* tac = tacAlloc();
 	tac->risul = newVar();
 	return tac;
 }
@@ -50,7 +49,7 @@ TAC* genDecl() {
 *	Generates three address code for a generic binary operation
 */
 TAC* genOp(char* op1, char* op2, char* operand) {
-	TAC *tac = (TAC*) malloc(sizeof(TAC));
+	TAC *tac = tacAlloc();
 	char* result = newVar();
 	tac->risul = result;
 	tac->op1 = op1;

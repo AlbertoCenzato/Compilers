@@ -1,70 +1,8 @@
 #include "fract.h"
 
-#include "node.h"
+#include "tac.h"
 #include "list.h"
 #include "code_gen.h"
-#include <stdlib.h>
-
-/*
-int mCD(int n1, int n2) {
-	if (n2 == 0)
-		return n1;
-	else
-		return mCD(n2, n1%n2);
-}
-
-fract  fractSum(fract  fr1, fract  fr2) {
-	fract result;
-	int den = fr1.den * fr2.den;
-	int num = fr1.num*fr2.den + fr2.num*fr1.den;
-	int m = mCD(num, den);
-	result.num = num / m;
-	result.den = den / m;
-	return result;
-}
-
-fract  fractSub(fract  fr1, fract  fr2) {
-	fr2.num = -fr2.num;
-	return fractSum(fr1, fr2);
-}
-
-fract  fractMul(fract  fr1, fract  fr2) {
-	fract  result;
-	int num = fr1.num * fr2.num;
-	int den = fr1.den * fr2.den;
-	int m = mCD(num, den);
-	result.num = num / m;
-	result.den = den / m;
-	return result;
-}
-
-fract  fractDiv(fract  fr1, fract fr2) {
-	int tmp = fr2.num;
-	fr2.num = fr2.den;
-	fr2.den = tmp;
-	return fractMul(fr1, fr2);
-}
-
-int fractLT(fract  f1, fract  f2) {
-	return f1.num*f2.den < f2.num*f1.den;
-}
-
-int fractGT(fract f1, fract  f2) {
-	return f1.num*f2.den > f2.num*f1.den;
-}
-
-int fractLE(fract  f1, fract  f2) {
-	return f1.num*f2.den <= f2.num*f1.den;
-}
-
-int fractGE(fract  f1, fract  f2) {
-	return f1.num*f2.den >= f2.num*f1.den;
-}
-
-void printFract(fract fr) {
-	printf("[%d|%d]", fr.num, fr.den);
-}
-*/
 
 
 List* fractGenDecl() {
@@ -76,18 +14,18 @@ List* fractGenDecl() {
 }
 
 /**
-*	Generates three address code instructions for addition
-* or subtraction of fract op1 and fract op2.
+* @brief Generates three address code instructions for addition
+*			or subtraction of fract op1 and fract op2.
 * @op1: list of instructions for the computation of the first fract.
 * @op2: list of instructions for the computation of the second fract.
 * @sum: flag stating if the two fracts must be added or subtracted,
 *			use 0 for subtraction, everything else for the addition.
 */
 List* fractGenSumSub(List* op1, List* op2, int sum) {
-	char* num1 = listFindSecToLast(op1)->val->risul;
-	char* den1 = listFindLast(op1)->val->risul;
-	char* num2 = listFindSecToLast(op2)->val->risul;
-	char* den2 = listFindLast(op2)->val->risul;
+	char* num1 = listGetSecToLast(op1)->risul;
+	char* den1 = listGetLast(op1)->risul;
+	char* num2 = listGetSecToLast(op2)->risul;
+	char* den2 = listGetLast(op2)->risul;
 
 	// t1 = num1 * den2
 	TAC *tac = genMul(num1, den2);
@@ -144,10 +82,10 @@ List* fractGenSub(List* op1, List* op2) {
 }
 
 List* fractGenMul(List* op1, List* op2) {
-	char* num1 = listFindSecToLast(op1)->val->risul;
-	char* den1 = listFindLast(op1)->val->risul;
-	char* num2 = listFindSecToLast(op2)->val->risul;
-	char* den2 = listFindLast(op2)->val->risul;
+	char* num1 = listGetSecToLast(op1)->risul;
+	char* den1 = listGetLast(op1)->risul;
+	char* num2 = listGetSecToLast(op2)->risul;
+	char* den2 = listGetLast(op2)->risul;
 
 	// num_ = num1 * num2
 	TAC* tac = genMul(num1, num2);
@@ -182,10 +120,10 @@ List* fractGenMul(List* op1, List* op2) {
 }
 
 List* fractGenDiv(List* op1, List* op2) {
-	char* num1 = listFindSecToLast(op1)->val->risul;
-	char* den1 = listFindLast(op1)->val->risul;
-	char* num2 = listFindSecToLast(op2)->val->risul;
-	char* den2 = listFindLast(op2)->val->risul;
+	char* num1 = listGetSecToLast(op1)->risul;
+	char* den1 = listGetLast(op1)->risul;
+	char* num2 = listGetSecToLast(op2)->risul;
+	char* den2 = listGetLast(op2)->risul;
 
 	// num_ = num1 * den2
 	TAC* tac = genMul(num1, den2);
@@ -223,8 +161,8 @@ List* fractGenDiv(List* op1, List* op2) {
 //new method for updating symboltable
 
 setFractVar(char * id, List * expr){
-char* num = listFindSecToLast(expr)->val->risul;
-char* den = listFindLast(expr)->val->risul;
+char* num = listGetSecToLast(expr)->risul;
+char* den = listGetLast(expr)->risul;
 
 
 

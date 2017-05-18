@@ -8,53 +8,46 @@
 #define TYPE_FRACT 1024
 #define TYPE_BOOL  1025
 
-/*
-struct Fract {
-	
+struct Bool {
+	char* value;
 };
 
-typedef struct Fract Fract;
 
-union varValue {
-	Fract fr;
-	int bool;
-};
-*/
-
-struct variable {
-    const char *id;            // we'll use this field as the key 
-	 char *num;
-	 char *den;
-	 int type;
-    UT_hash_handle hh; // makes this structure hashable 
-};
-
-typedef struct variable variable;
-
+typedef struct Bool  Bool;
 
 /*
-* add variable to symbol table
+* @brief Adds fract variable with identifier "id" to symbol table
 */
 void addFractVar(char *id);
 
-//void addBoolVar(char *id);
-
-/*
-* update variable "id" in the symbol table
+/**
+* @brief Adds bool variable with identifier "id" to symbol table
 */
-//variable* findVar(char *id);
+void addBoolVar(char *id);
 
+
+/**
+* @brief Gets fract variable with identifier "id" from symbol table
+*/
+Fract* getFractVar(char *id);
+
+/**
+* @brief Gets bool variable with identifier "id" from symbol table
+*/
+Bool* getBoolVar(char *id);
+
+
+/**
+ * @brief Assigns fract variable with identifier "id" the given
+ *			 numerator and denominator.
+ */
 void setFractVar(char *id, char* num, char* den);
 
-//void setBoolVar(char *id, int value);
-
-/*
-* read variable "id" in the symbol table
+/**
+* @brief Assigns fract variable with identifier "id" the given value.
 */
-variable* getVar(char *id);
+void setBoolVar(char *id, char* value);
 
-//struct fract getFractVar(char *id);
 
-//int getBoolVar(char *id);
 
 #endif

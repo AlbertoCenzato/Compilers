@@ -1,24 +1,20 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-struct ThreeAddressCode;
+struct ThreeAddressCode;	// forward declaration
 typedef struct ThreeAddressCode TAC;
 
-struct Node;
-typedef struct Node Node;
-
 struct List;	// forward declaration to keep private struct members
-
-typedef struct List List;	// typedef for ease of use
+typedef struct List List;
 
 List* listAlloc();
 
 void listFree(List *list);
 
 //funzione per trovare l'ultimo nodo della lista
-Node* listFindLast(List* list);
+TAC* listGetLast(List* list);
 
-Node* listFindSecToLast(List* list);
+TAC* listGetSecToLast(List* list);
 
 //funzione aggiungere elemento in coda
 void  listAdd(List *list, TAC *tac);

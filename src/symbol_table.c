@@ -4,67 +4,45 @@
 #include <stdlib.h>
 #include <string.h>
 
+// ---------- struct and union definitions ----------
+
+union varValue {
+	Fract fract;
+	Bool  bool;
+};
+
+struct variable {
+	const char *id;            // we'll use this field as the key 
+	union varValue* var;
+	int type;
+	UT_hash_handle hh; // makes this structure hashable 
+};
+
+typedef struct variable variable;
+
+
+// ----------------------------------------------------
+
 variable *mySymbolTable = NULL;
 
 
-void addFractVar(char *id) {
-	variable *tmp;
-	HASH_FIND_STR(mySymbolTable, id, tmp);
-	if (tmp == NULL) {
-		tmp = (variable*) malloc(sizeof(variable));
-		tmp->id = id;
-		tmp->type = TYPE_FRACT;
-		HASH_ADD_KEYPTR(hh, mySymbolTable, tmp->id, strlen(tmp->id), tmp);	// gives ownership of id to mySymbolTable
+// ---------- private functions ----------
+
+variable* addVar(char *id ) {
+	variable *var;
+	HASH_FIND_STR(mySymbolTable, id, var);
+	if (var == NULL) {
+		var = (variable*) malloc(sizeof(variable));
+		var->id = id;
+		HASH_ADD_KEYPTR(hh, mySymbolTable, var->id, strlen(var->id), var);	// gives ownership of id to mySymbolTable
 	}
 	else {
 		printf("ERROR: multiple definition for	variable %s\n", id);
 		exit(-1);
 	}
-}
 
-/*
-void addBoolVar(char *id) {
-	variable *tmp;
-	HASH_FIND_STR(mySymbolTable, id, tmp);
-	if (tmp == NULL) {
-		tmp = (variable*) malloc(sizeof(variable));
-		tmp->id = id;
-		//tmp->value = 0;
-		tmp->type = TYPE_BOOL;
-		HASH_ADD_KEYPTR(hh, mySymbolTable, tmp->id, strlen(tmp->id), tmp);	// gives ownership of id to mySymbolTable
-	}
-	else {
-		printf("ERROR: multiple definition for	variable %s\n", id);
-		exit(-1);
-	}
+	return var;
 }
-*/
-
-/*
-variable* findVar(char *id) {
-	variable *tmp;
-	HASH_FIND_STR(mySymbolTable, id, tmp);
-	if (tmp == NULL) {								// TODO: move this in setFractVar
-		printf("ERROR: variable %s is not defined\n", id);
-		exit(-1);
-	}
-	return tmp;
-}
-*/
-
-void setFractVar(char *id, char *num, char *den) {
-	variable *tmp = getVar(id);
-	tmp->num = num;
-	tmp->den = den;
-}
-
-/*
-void setBoolVar(char *id, int value) {
-	variable *tmp;
-	tmp = findVar(id);
-	tmp->value.bool = value;
-}
-*/
 
 variable* getVar(char *id) {
 	variable *tmp;
@@ -76,37 +54,47 @@ variable* getVar(char *id) {
 	return tmp;
 }
 
-/*
-struct fract getFractVar(char *id) {
-	variable *tmp;
-	tmp = getVar(id);
-	if (tmp->type != TYPE_FRACT) {
-		printf("ERROR: variable %s is not of type fract\n", id);
+
+
+// ---------- public functions ----------
+
+void addFractVar(char *id) {
+	variable* var = addVar(id);
+	var->type = TYPE_FRACT;
+}
+
+void addBoolVar(char *id) {
+	variable* var = addVar(id);
+	var->type = TYPE_BOOL;
+}
+
+Fract* getFractVar(char* id) {
+	variable* var = getVar(id);
+	if (var->type != TYPE_FRACT) {
+		printf("ERROR: trying to access non fract variable %s as fract!\n", id);
 		exit(-1);
 	}
-	return tmp->value.fr;
-}
-*/
 
-/*
-int getBoolVar(char *id) {
-	variable *tmp;
-	tmp = getVar(id);
-	if (tmp->type != TYPE_BOOL) {
-		printf("ERROR: variable %s is not of type bool\n", id);
+	return &(var->var->fract);
+}
+
+Bool* getBoolVar(char* id) {
+	variable* var = getVar(id);
+	if (var->type != TYPE_BOOL) {
+		printf("ERROR: trying to access non bool variable %s as bool!\n", id);
 		exit(-1);
 	}
-	return tmp->value.bool;
+
+	return &(var->var->bool);
 }
 
-void setNumVar(char *id, int value) {
-	variable *tmp;
-	tmp = findVar(id);
-	tmp->value.fr.num = value;
+void setFractVar(char *id, char *num, char *den) {
+	Fract* fr = getFractVar(id);
+	fr->num = num;
+	fr->den = den;
 }
 
-void setDenVar(char *id, int value) {
-	variable *tmp;
-	tmp = findVar(id);
-	tmp->value.fr.den = value;
+void setBoolVar(char *id, char *value) {
+	Bool *bl = getBoolVar(id);
+	bl->value = value;
 }
