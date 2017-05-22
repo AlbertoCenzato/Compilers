@@ -75,11 +75,27 @@ void reduceFract(char *text, int len) {
 	int m = mCDflex(num,den);	// reduce num and den
 
 	// print result
-   // printf("<FRACT,%c %d|%d>\n", text[0], num/m, den/m);
-		yylval.fr.num = num;
-		yylval.fr.den = den;
-       return; 
-       
+    // printf("<FRACT,%c %d|%d>\n", text[0], num/m, den/m);
+
+	num = num/m;
+	den = den/m;
+
+	int numDigits = 0;
+	for (int tmp = num; tmp > 0; tmp = tmp / 10) {
+		++numDigits;
+	}
+	int denDigits = 0;
+	for (int tmp = den; tmp > 0; tmp = tmp / 10) {
+		++denDigits;
+	}
+
+	char* numStr = (char*) malloc((numDigits+1)*sizeof(char));
+	char* denStr = (char*) malloc((denDigits+1)*sizeof(char));
+
+	yylval.fr.num = numStr
+	yylval.fr.den = denStr;
+    
+	return;    
 }
 
 
@@ -91,13 +107,12 @@ int mCDflex(int n1, int n2) {
 }
 
 
-int main()
-{ if (yyparse() != 0)
-fprintf(stderr, " Abnormal exit\n" ); 
-return 0;
+int main() { 
+	if (yyparse() != 0)
+		fprintf(stderr, " Abnormal exit\n" ); 
+	return 0;
 }
 
-void yyerror(char *s)
-{ fprintf(stderr, " Error: %s\n ", s);
-
+void yyerror(char *s) { 
+	fprintf(stderr, " Error: %s\n ", s);
 }	

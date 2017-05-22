@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(f_compiler)
 
-## Add support for C++11, supported in ROS Kinetic and newer
 add_definitions(-std=c99)
 
-## System dependencies are found with CMake's conventions
 find_package(BISON REQUIRED)
 find_package(FLEX  REQUIRED)
 
@@ -12,19 +10,19 @@ find_package(FLEX  REQUIRED)
 ## Build ##
 ###########
 
-#trying to get the built files in the right folder
-#set(LIBRARY_OUTPUT_PATH /home/alberto/workspace/lib)
-#set(EXECUTABLE_OUTPUT_PATH /home/alberto/workspace/bin)
-
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include)
 
-BISON_TARGET(parser grammar/syntactF.y syntactF.tab.cpp COMPILE_FLAGS -d)
-FLEX_TARGET(lexer grammar/lexF1.fl lex.yy.c)
+BISON_TARGET(parser grammar/sintactF.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FLAGS -d VERBOSE bison_log.txt)
+FLEX_TARGET(lexer grammar/lexF1.fl ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.c)
+ADD_FLEX_BISON_DEPENDENCY(lexer parser)
+
+MESSAGE(STATUS "BISON_parser_OUTPUT:" ${BISON_parser_OUTPUTS})
+MESSAGE(STATUS "FLEX_lexer_OUTPUT:"   ${FLEX_lexer_OUTPUTS})
 
 ## Declare a C++ library
-#add_library(robot src/robot.cpp)
+#add_library(compiler_code)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -34,7 +32,8 @@ FLEX_TARGET(lexer grammar/lexF1.fl lex.yy.c)
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME} 
-	${FLEX_lexer_OUTPUT} ${BISON_parser_OUTPUT} 
+	${BISON_parser_OUTPUTS}  
+	${FLEX_lexer_OUTPUTS}
 	src/code_gen.c
 	src/fract.c
 	src/list.c
@@ -44,10 +43,10 @@ add_executable(${PROJECT_NAME}
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME} add_dependencies_here)
+# add_dependencies(${PROJECT_NAME} compiler_code)
 
 ## Specify libraries to link a library or executable target against
-#target_link_libraries(${PROJECT_NAME} add_link_libraries_here)
+#target_link_libraries(${PROJECT_NAME} compiler_code)
 
 #############
 ## Install ##

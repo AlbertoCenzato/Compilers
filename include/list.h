@@ -22,4 +22,10 @@ void  listAdd(List *list, TAC *tac);
 //unire due liste in cui l2 vene attaccata alla coda di l1
 void listConcat(List *list1, List *list2);
 
+/**
+ *	@brief Prints a Three Address Code list to standard output
+ *	@param list: list to be printed
+ */
+void listPrint(List* list);
+
 #endif // LIST_H_

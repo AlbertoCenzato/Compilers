@@ -5,10 +5,14 @@
 #include "code_gen.h"
 #include <stdlib.h>
 
-void fractFromList(List* list, Fract* fract) {
-	fract->num = listGetSecToLast(list)->risul;
-	fract->den = listGetLast(list)->risul;
+char* fractNumFromList(List* list) {
+	return listGetSecToLast(list)->risul;
 }
+
+char* fractDenFromList(List* list) {
+	return listGetLast(list)->risul;
+}
+
 
 List* fractGenDecl() {
 	List* list = listAlloc();
@@ -18,22 +22,29 @@ List* fractGenDecl() {
 	return list;
 }
 
+List* fractGenLiteral(Fract* fract) {
+	List* list = listAlloc();
+	TAC*  tac = genAssign(fract->num);
+	listAdd(list, tac);
+	tac = genAssign(fract->den);
+	listAdd(list, tac);
+
+	return list;
+}
+
 
 // TODO: improve this function
-List* fractGenAssign(Fract* fract, List* list) {
+List* fractGenAssign(char* num, char* den, List* list) {
 	List* newList = listAlloc();
-	//Fract id = getFractVar($1);
-	Fract* fr2 = (Fract*) malloc(sizeof(Fract));
-	fractFromList(list, fr2);
 
 	TAC* tac = tacAlloc();
-	tac->risul = fract->num;
-	tac->op1 = fr2->num;
+	tac->risul = num;
+	tac->op1 = fractNumFromList(list);
 	listAdd(newList, tac);
 
 	tac = tacAlloc();
-	tac->risul = fract->den;
-	tac->op1 = fr2->den;
+	tac->risul = den;
+	tac->op1 = fractDenFromList(list);
 	listAdd(newList, tac);
 
 	listConcat(list, newList);
@@ -187,7 +198,7 @@ List* fractGenDiv(List* op1, List* op2) {
 
 
 //new method for updating symboltable
-
+/*
 setFractVar(char * id, List * expr){
 char* num = listGetSecToLast(expr)->risul;
 char* den = listGetLast(expr)->risul;
@@ -204,3 +215,4 @@ tac = gensetDenVar(id,den);
 	listAdd(expr, tac);
 
 }
+*/

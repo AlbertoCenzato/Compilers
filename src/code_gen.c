@@ -45,6 +45,14 @@ TAC* genDecl() {
 	return tac;
 }
 
+TAC* genAssign(char* val) {
+	TAC* tac = tacAlloc();
+	tac->risul = newVar();
+	tac->op1 = val;
+
+	return tac;
+}
+
 /**
 *	Generates three address code for a generic binary operation
 */

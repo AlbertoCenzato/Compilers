@@ -16,6 +16,11 @@ int stringLen(const char* str);
 TAC* genDecl();
 
 /**
+ *	GEnerates three address code for variable assignment
+ */
+TAC* genAssign(char* val);
+
+/**
  *	Generates three address code for addition of 
  * operand op1 and operand op2
  */

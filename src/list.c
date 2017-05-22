@@ -5,6 +5,8 @@
 #include "tac.h"
 #include "code_gen.h"
 
+// ---------- Node private inner class ----------
+
 struct Node {
 	TAC* val;
 	struct Node* next;
@@ -26,6 +28,11 @@ void nodeFree(Node *node) {
 	tacFree(node->val);
 	free(node);
 }
+
+
+// -------------------------------------------
+// ---------------- List ---------------------
+// -------------------------------------------
 
 struct List {
 	Node* head;
@@ -112,7 +119,15 @@ void listConcat(List *list1, List *list2) {
 	}
 }
 
+void listPrint(List* list) {
+	Node* node = list->head;
+	while(node != NULL) {
+		tacPrint(node->val);
+		node = node->next;
+	}
+}
 
+/*
 int main() {
 
 	//provo la lista
@@ -147,3 +162,4 @@ int main() {
 	listFree(list1);
 
 }
+*/
