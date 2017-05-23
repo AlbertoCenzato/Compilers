@@ -14,12 +14,12 @@ find_package(FLEX  REQUIRED)
 ## Your package locations should be listed before other locations
 include_directories(include)
 
-BISON_TARGET(parser grammar/sintactF.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FLAGS -d VERBOSE bison_log.txt)
-FLEX_TARGET(lexer grammar/lexF1.fl ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.c)
+BISON_TARGET(parser grammar/sintactF.y ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/parser.tab.c COMPILE_FLAGS -d)
+FLEX_TARGET(lexer grammar/lexF1.fl ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/lexer.yy.c)
 ADD_FLEX_BISON_DEPENDENCY(lexer parser)
 
-MESSAGE(STATUS "BISON_parser_OUTPUT:" ${BISON_parser_OUTPUTS})
-MESSAGE(STATUS "FLEX_lexer_OUTPUT:"   ${FLEX_lexer_OUTPUTS})
+MESSAGE(STATUS "BISON_parser_OUTPUT: " ${BISON_parser_OUTPUTS})
+MESSAGE(STATUS "FLEX_lexer_OUTPUT: "   ${FLEX_lexer_OUTPUTS})
 
 ## Declare a C++ library
 #add_library(compiler_code)
