@@ -32,15 +32,15 @@ if|while|print  { printf("<KEYWORD,%s>\n", yytext); 				 }
 
 "<"			    { return LT;  }
 ">"			    { return GT;  }
-"=="			    { return EQ;  }
-"<="			    { return LE;  }
-">="			    { return GE;  }
-"!="			    { return NE;  }
-"&&"			    { return AND; }
-"||"			    { return OR;  }
-"!"				 { return NOT; }
+"=="			{ return EQ;  }
+"<="			{ return LE;  }
+">="			{ return GE;  }
+"!="			{ return NE;  }
+"&&"			{ return AND; }
+"||"			{ return OR;  }
+"!"				{ return NOT; }
 
-.|\n  			    { return yytext[0]; }
+.|\n  			{ return yytext[0]; }
 
 %%
 

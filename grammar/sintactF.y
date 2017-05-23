@@ -3,7 +3,9 @@
 #include <stdio.h> 
 
 #include "fract.h"
+#include "list.h"
 #include "symbol_table.h"
+#include "tac.h"
 
 int yylex();
 void yyerror(char *s);
@@ -12,22 +14,22 @@ void yyerror(char *s);
 
 %union{
 	Fract fract;
-    List * fr;
+    List * code;
 	int   bool;
 	char* str;
 }
 
-%token <str>  ID
-%token <fract>   FRACT
-%token <bool> BOOL
-%token <str>  KW_FRACT
-%token <str>  KW_BOOL
-%type  <fr>   expr
-%type  <bool> bexpr
-%type  <bool> comp
+%token <str>   ID
+%token <fract> FRACT
+%token <bool>  BOOL
+%token <str>   KW_FRACT
+%token <str>   KW_BOOL
+%type  <code>  expr
+%type  <bool>  bexpr
+%type  <bool>  comp
 
-%type <fr> assign
-%type <fr> declar
+%type <code> assign
+%type <code> declar
 
 %left '+' '-'
 %left '*' '/'
@@ -39,8 +41,8 @@ void yyerror(char *s);
 %%
 
 lines : lines expr  '\n'	{ listPrint($2); }
-      | lines bexpr '\n'	{ printf("%d\n", $2); }
-      | lines comp  '\n'	{ printf("%d\n", $2); }
+      //| lines bexpr '\n'	{ printf("%d\n", $2); }
+      //| lines comp  '\n'	{ printf("%d\n", $2); }
 	  | lines declar '\n'	{ ; }
 	  | lines assign '\n'	{ ; }
       | /* empty */
@@ -53,10 +55,11 @@ expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | expr '/' expr	{ $$ = fractGenDiv($1,$3); }
      | '(' expr ')' 	{ $$ = $2; }
      | ID 				{ $$ = getFractVar($1); }	
-     | FRACT			{ $$ = fractGenLiteral($1); }
+     | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 
 // TODO: risolvere problema di type checking
+/*
 bexpr : bexpr OR bexpr  { $$ = $1 || $3; }
       | bexpr AND bexpr { if ($1 == 1 && $3 == 1) $$ = 1; 
 						  else			  		  $$ = 0; }
@@ -66,7 +69,9 @@ bexpr : bexpr OR bexpr  { $$ = $1 || $3; }
       | comp         	{ $$ = $1; }
       | BOOL
       ;
+	  */
 
+	  /*
 comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
      | expr NE expr { $$ =  ($1.num != $3.num) || ($1.den != $3.den); }
      | expr LT expr { $$ =  fractLT($1,$3); }
@@ -74,13 +79,14 @@ comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
      | expr LE expr { $$ =  fractLE($1,$3); }
      | expr GE expr { $$ =  fractGE($1,$3); }
      ;
+	 */
 	  
-declar : KW_FRACT ID ';' { List* list = genFractDecl();
+declar : KW_FRACT ID ';' { List* list = fractGenDecl();
 						   addFractVar($2);
-						   setFractVar($2, list->head->risul, list->head->next->risul); }
+						   setFractVar($2, listGetSecToLast(list)->risul, listGetLast(list)->risul); }
        ;
 		 
-assign : ID '=' expr  ';' { Fract* num = getFractVar($1);
+assign : ID '=' expr  ';' { Fract* fr = getFractVar($1);
 							$$ = fractGenAssign(fr, $3); }
        ;
 %%

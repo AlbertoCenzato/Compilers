@@ -1,9 +1,12 @@
 #include "fract.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "tac.h"
 #include "list.h"
 #include "code_gen.h"
-#include <stdlib.h>
+
 
 char* fractNumFromList(List* list) {
 	return listGetSecToLast(list)->risul;
@@ -24,9 +27,16 @@ List* fractGenDecl() {
 
 List* fractGenLiteral(Fract* fract) {
 	List* list = listAlloc();
-	TAC*  tac = genAssign(fract->num);
+	int numLength = stringLen(fract->num); 
+	int denLength = stringLen(fract->den);
+	char* num = (char*) malloc(numLength * sizeof(char));
+	char* den = (char*) malloc(denLength * sizeof(char));
+	strcpy(num, fract->num);
+	strcpy(den, fract->den);
+
+	TAC*  tac = genAssign(num);
 	listAdd(list, tac);
-	tac = genAssign(fract->den);
+	tac = genAssign(den);
 	listAdd(list, tac);
 
 	return list;
@@ -34,16 +44,17 @@ List* fractGenLiteral(Fract* fract) {
 
 
 // TODO: improve this function
-List* fractGenAssign(char* num, char* den, List* list) {
+List* fractGenAssign(Fract* fract, List* list) {
+
 	List* newList = listAlloc();
 
 	TAC* tac = tacAlloc();
-	tac->risul = num;
+	tac->risul = fract->num;
 	tac->op1 = fractNumFromList(list);
 	listAdd(newList, tac);
 
 	tac = tacAlloc();
-	tac->risul = den;
+	tac->risul = fract->den;
 	tac->op1 = fractDenFromList(list);
 	listAdd(newList, tac);
 

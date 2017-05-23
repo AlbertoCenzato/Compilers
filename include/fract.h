@@ -36,7 +36,8 @@ List* fractGenDecl();
  *	@brief Generates three address code for the assignment
  *			 of an expression result to the given fract
  */
-List* fractGenAssign(char* num, char* den, List* list);
+List* fractGenAssign(Fract* fract, List* list);
+//List* fractGenAssign(char* num, char* den, List* list);
 
 /**
  *	@brief Generates to temporay variables to store numerator
