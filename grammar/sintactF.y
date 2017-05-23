@@ -2,8 +2,8 @@
 #include <ctype.h> 
 #include <stdio.h> 
 
-#include "fract.h"
-#include "list.h"
+//#include "fract.h"
+//#include "list.h"
 #include "symbol_table.h"
 #include "tac.h"
 
@@ -12,9 +12,14 @@ void yyerror(char *s);
 
 %}
 
+%code requires {
+   #include "fract.h"
+   #include "list.h"
+}
+
 %union{
-	Fract fract;
-    List * code;
+	struct Fract fract;
+    struct List * code;
 	int   bool;
 	char* str;
 }
@@ -54,7 +59,7 @@ expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | expr '*' expr	{ $$ = fractGenMul($1,$3); }
      | expr '/' expr	{ $$ = fractGenDiv($1,$3); }
      | '(' expr ')' 	{ $$ = $2; }
-     | ID 				{ $$ = getFractVar($1); }	
+     | ID 				{ $$ = getFractVar($1); }	// FIXME! this rule returns a Fract* instead of the expected List*!!
      | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 

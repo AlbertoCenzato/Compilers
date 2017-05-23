@@ -27,12 +27,8 @@ List* fractGenDecl() {
 
 List* fractGenLiteral(Fract* fract) {
 	List* list = listAlloc();
-	int numLength = stringLen(fract->num); 
-	int denLength = stringLen(fract->den);
-	char* num = (char*) malloc(numLength * sizeof(char));
-	char* den = (char*) malloc(denLength * sizeof(char));
-	strcpy(num, fract->num);
-	strcpy(den, fract->den);
+	char* num = strdup(fract->num);
+	char* den = strdup(fract->den);
 
 	TAC*  tac = genAssign(num);
 	listAdd(list, tac);

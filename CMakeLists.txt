@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(f_compiler)
 
-add_definitions(-std=c99)
+add_definitions(-std=gnu99)
 
 find_package(BISON REQUIRED)
 find_package(FLEX  REQUIRED)

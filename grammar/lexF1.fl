@@ -2,6 +2,7 @@
 
 %{
 #include <math.h>
+#include <string.h>
 #include "parser.tab.h"
 
 extern YYSTYPE yylval;
@@ -23,7 +24,7 @@ relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
 bool			{ yylval.str = strdup(yytext); return KW_BOOL;  }
 fract			{ yylval.str = strdup(yytext); return KW_FRACT; }
-if|while|print  { printf("<KEYWORD,%s>\n", yytext); 				 }
+if|while|print  { printf("<KEYWORD,%s>\n", yytext); 		    }
 
 {id}			 { yylval.str = strdup(yytext); return ID; }
 {fract}  		 { reduceFract(yytext, yyleng); return FRACT; }
@@ -92,8 +93,8 @@ void reduceFract(char *text, int len) {
 	char* numStr = (char*) malloc((numDigits+1)*sizeof(char));
 	char* denStr = (char*) malloc((denDigits+1)*sizeof(char));
 
-	yylval.fr.num = numStr
-	yylval.fr.den = denStr;
+	yylval.fract.num = numStr;
+	yylval.fract.den = denStr;
     
 	return;    
 }
