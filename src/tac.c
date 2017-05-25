@@ -18,5 +18,13 @@ void tacFree(TAC *tac) {
 }
 
 void tacPrint(TAC* tac) {
-	printf("%s = %s %s %s\n", tac->risul, tac->op1, tac->op, tac->op2);
+	if (tac->risul != NULL)
+		printf("%s ", tac->risul);
+	if (tac->op1 != NULL)
+		printf("= %s ", tac->op1);
+	if (tac->op != NULL)
+		printf("%s ", tac->op);
+	if (tac->op2 != NULL)
+		printf("%s", tac->op2);
+	printf("\n");
 }

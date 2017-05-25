@@ -23,7 +23,7 @@ relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 {ws}			    				{ ; }
 
 bool			{ yylval.str = strdup(yytext); return KW_BOOL;  }
-fract			{ yylval.str = strdup(yytext); return KW_FRACT; }
+fract			{ printf("fract"); yylval.str = /*strdup(*/yytext/*)*/; return KW_FRACT; }
 if|while|print  { printf("<KEYWORD,%s>\n", yytext); 		    }
 
 {id}			 { yylval.str = strdup(yytext); return ID; }
@@ -75,9 +75,6 @@ void reduceFract(char *text, int len) {
 
 	int m = mCDflex(num,den);	// reduce num and den
 
-	// print result
-    // printf("<FRACT,%c %d|%d>\n", text[0], num/m, den/m);
-
 	num = num/m;
 	den = den/m;
 
@@ -93,6 +90,9 @@ void reduceFract(char *text, int len) {
 	char* numStr = (char*) malloc((numDigits+1)*sizeof(char));
 	char* denStr = (char*) malloc((denDigits+1)*sizeof(char));
 
+	sprintf(numStr, "%d", num);
+	sprintf(denStr, "%d", den);
+
 	yylval.fract.num = numStr;
 	yylval.fract.den = denStr;
     
@@ -107,12 +107,13 @@ int mCDflex(int n1, int n2) {
         return mCDflex(n2, n1%n2);
 }
 
-
+/*
 int main() { 
 	if (yyparse() != 0)
 		fprintf(stderr, " Abnormal exit\n" ); 
 	return 0;
 }
+*/
 
 void yyerror(char *s) { 
 	fprintf(stderr, " Error: %s\n ", s);

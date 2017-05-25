@@ -48,7 +48,7 @@ void yyerror(char *s);
 lines : lines expr  '\n'	{ listPrint($2); }
       //| lines bexpr '\n'	{ printf("%d\n", $2); }
       //| lines comp  '\n'	{ printf("%d\n", $2); }
-	  | lines declar '\n'	{ ; }
+	  | lines declar '\n'	{ printf("lines declar"); }
 	  | lines assign '\n'	{ ; }
       | /* empty */
       ;
@@ -59,7 +59,7 @@ expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | expr '*' expr	{ $$ = fractGenMul($1,$3); }
      | expr '/' expr	{ $$ = fractGenDiv($1,$3); }
      | '(' expr ')' 	{ $$ = $2; }
-     | ID 				{ $$ = getFractVar($1); }	// FIXME! this rule returns a Fract* instead of the expected List*!!
+     | ID 				{ $$ = fractGenID(getFractVar($1)); }
      | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 
@@ -86,7 +86,8 @@ comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
      ;
 	 */
 	  
-declar : KW_FRACT ID ';' { List* list = fractGenDecl();
+declar : KW_FRACT ID ';' { printf("declaration");
+							List* list = fractGenDecl();
 						   addFractVar($2);
 						   setFractVar($2, listGetSecToLast(list)->risul, listGetLast(list)->risul); }
        ;
@@ -96,6 +97,10 @@ assign : ID '=' expr  ';' { Fract* fr = getFractVar($1);
        ;
 %%
 
+int main() {
+	if (yyparse() != 0) 
+		fprintf(stderr, "%s\n\n", "Abnormal exit.");
 
-
+	return 0;
+}
 
