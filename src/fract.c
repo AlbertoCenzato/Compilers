@@ -203,6 +203,125 @@ List* fractGenDiv(List* op1, List* op2) {
 	return op1;
 }
 
+List * fractGenEQ(List* op1, List* op2){
+
+    char* num1 = listGetSecToLast(op1)->risul;
+	char* den1 = listGetLast(op1)->risul;
+	char* num2 = listGetSecToLast(op2)->risul;
+	char* den2 = listGetLast(op2)->risul;
+
+    //num_=num1==num2
+    TAC* tac = genEQ(num1, num2);
+    char* num_ = tac->risul;
+    List* list = listAlloc();
+    listAdd(list, tac);
+
+
+    //den=den1==den2
+    tac = genEQ(den1, den2);
+    char* den_ = tac->risul;
+    listAdd(list, tac);
+
+
+    //resul=num_&&den_
+    tac = genAND(num_, den_);
+    listAdd(list, tac);
+
+    listConcat(op1, op2);
+    listConcat(op1, list);
+    //TODO free
+
+    return op1;
+}
+
+
+
+List * fractGenNE(List* op1, List* op2){
+
+  List * NE=fractGenEQ(op1,op2);
+  listGeLast(NE)->op='!=';
+  return NE;
+}
+
+
+
+List * fractGenLT(List* op1, List* op2){
+
+    char* num1 = listGetSecToLast(op1)->risul;
+	char* den1 = listGetLast(op1)->risul;
+	char* num2 = listGetSecToLast(op2)->risul;
+	char* den2 = listGetLast(op2)->risul;
+
+    //num_1=den2*num1
+    TAC* tac = genMul(num1, den2);
+    tac = genMul(den2, den1);
+    char* num = tac->risul;
+    listAdd(list, tac);
+
+    //num_2=den1*num2
+    tac = genMul(den1, num2);
+    char* den_ = tac->risul;
+    listAdd(list, tac);
+
+    //risul=num_2>num_1
+    tac = genGT(den1, num2);
+    char* den_ = tac->risul;
+    listAdd(list, tac);
+
+
+    listConcat(op1, op2);
+    listConcat(op1, list);
+
+    return op1;
+}
+
+
+List * fractGenGT(List* op1, List* op2){
+
+    char* num1 = listGetSecToLast(op1)->risul;
+	char* den1 = listGetLast(op1)->risul;
+	char* num2 = listGetSecToLast(op2)->risul;
+	char* den2 = listGetLast(op2)->risul;
+
+    //num_1=den2*num1
+    TAC* tac = genMul(num1, den2);
+    tac = genMul(den2, den1);
+    char* num = tac->risul;
+    listAdd(list, tac);
+
+    //num_2=den1*num2
+    tac = genMul(den1, num2);
+    char* den_ = tac->risul;
+    listAdd(list, tac);
+
+    //risul=num_2<num_1
+    tac = genLT(den1, num2);
+    char* den_ = tac->risul;
+    listAdd(list, tac);
+
+
+    listConcat(op1, op2);
+    listConcat(op1, list);
+
+    return op1;
+}
+
+List * fractGenLE(List* op1, List* op2){
+
+  List * NE=fractGenEQ(op1,op2);
+  listGeLast(NE)->op='>=';
+  return NE;
+}
+
+List * fractGenGE(List* op1, List* op2){
+
+  List * NE=fractGenEQ(op1,op2);
+  listGeLast(NE)->op='<=';
+  return NE;
+}
+
+
+
 
 //new method for updating symboltable
 /*
