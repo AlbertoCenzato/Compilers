@@ -255,17 +255,16 @@ List * fractGenLT(List* op1, List* op2){
     //num_1=den2*num1
     TAC* tac = genMul(num1, den2);
     tac = genMul(den2, den1);
-    char* num = tac->risul;
+    char* num _1= tac->risul;
     listAdd(list, tac);
 
     //num_2=den1*num2
     tac = genMul(den1, num2);
-    char* den_ = tac->risul;
+    char* num_2 = tac->risul;
     listAdd(list, tac);
 
     //risul=num_2>num_1
-    tac = genGT(den1, num2);
-    char* den_ = tac->risul;
+    tac = genGT(num_2, num_1);
     listAdd(list, tac);
 
 
@@ -286,17 +285,16 @@ List * fractGenGT(List* op1, List* op2){
     //num_1=den2*num1
     TAC* tac = genMul(num1, den2);
     tac = genMul(den2, den1);
-    char* num = tac->risul;
+    char* num_1 = tac->risul;
     listAdd(list, tac);
 
     //num_2=den1*num2
     tac = genMul(den1, num2);
-    char* den_ = tac->risul;
+    char* num_2 = tac->risul;
     listAdd(list, tac);
 
     //risul=num_2<num_1
-    tac = genLT(den1, num2);
-    char* den_ = tac->risul;
+    tac = genLT(num_2,num_1);
     listAdd(list, tac);
 
 
