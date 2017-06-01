@@ -22,14 +22,14 @@ relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
 {ws}			    				{ ; }
 
-bool			{ yylval.str = strdup(yytext); return KW_BOOL;  }
-fract			{ printf("fract"); yylval.str = /*strdup(*/yytext/*)*/; return KW_FRACT; }
+bool				 { yylval.str = strdup(yytext); return KW_BOOL;  }
+fract				 { yylval.str = strdup(yytext); return KW_FRACT; }
 if|while|print  { printf("<KEYWORD,%s>\n", yytext); 		    }
 
-{id}			 { yylval.str = strdup(yytext); return ID; }
-{fract}  		 { reduceFract(yytext, yyleng); return FRACT; }
-0|false	   	   	 { yylval.bool = 0; return BOOL; }
-[1-9][0-9]*|true { yylval.bool = 1; return BOOL; }
+{id}					{ yylval.str = strdup(yytext); return ID; }
+{fract}  			{ reduceFract(yytext, yyleng); return FRACT; }
+0|false	   	   { yylval.bool = 0; return BOOL; }
+[1-9][0-9]*|true	{ yylval.bool = 1; return BOOL; }
 
 "<"			    { return LT;  }
 ">"			    { return GT;  }

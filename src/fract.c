@@ -18,16 +18,10 @@ char* fractDenFromList(List* list) {
 
 
 List* fractGenDecl() {
-	printf("allocating new list...");
 	List* list = listAlloc();
-	printf("done");
-	printf("generating declaration...");
 	listAdd(list, genDecl());
-	printf("done");
-	printf("generating declaration...");
 	listAdd(list, genDecl());
-	printf("done");
-
+	
 	return list;
 }
 

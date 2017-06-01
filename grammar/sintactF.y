@@ -2,11 +2,6 @@
 #include <ctype.h> 
 #include <stdio.h> 
 
-//#include "fract.h"
-//#include "list.h"
-#include "symbol_table.h"
-#include "tac.h"
-
 int yylex();
 void yyerror(char *s);
 
@@ -15,13 +10,15 @@ void yyerror(char *s);
 %code requires {
    #include "fract.h"
    #include "list.h"
+   #include "symbol_table.h"
+   #include "tac.h"
 }
 
 %union{
-	struct Fract fract;
-    struct List * code;
-	int   bool;
-	char* str;
+   Fract fract;
+   List * code;
+   int   bool;
+   char* str;
 }
 
 %token <str>   ID
@@ -29,10 +26,10 @@ void yyerror(char *s);
 %token <bool>  BOOL
 %token <str>   KW_FRACT
 %token <str>   KW_BOOL
+//%type  <code>  lines
 %type  <code>  expr
 %type  <bool>  bexpr
 %type  <bool>  comp
-
 %type <code> assign
 %type <code> declar
 
@@ -48,7 +45,7 @@ void yyerror(char *s);
 lines : lines expr  '\n'	{ listPrint($2); }
       //| lines bexpr '\n'	{ printf("%d\n", $2); }
       //| lines comp  '\n'	{ printf("%d\n", $2); }
-	  | lines declar '\n'	{ printf("lines declar"); }
+	  | lines declar '\n'	{ listPrint($2); }
 	  | lines assign '\n'	{ ; }
       | /* empty */
       ;
@@ -86,13 +83,16 @@ comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
      ;
 	 */
 	  
-declar : KW_FRACT ID ';' { printf("declaration");
-							List* list = fractGenDecl();
+declar : KW_FRACT ID ';' { List* list = fractGenDecl();
 						   addFractVar($2);
-						   setFractVar($2, listGetSecToLast(list)->risul, listGetLast(list)->risul); }
+						   char* t1 = listGetSecToLast(list)->risul;
+						   char* t2 = listGetLast(list)->risul;
+						   setFractVar($2, t1, t2); 
+						   $$ = list; }
        ;
 		 
-assign : ID '=' expr  ';' { Fract* fr = getFractVar($1);
+assign : ID '=' expr  ';' { printf("ID = expr;");
+							Fract* fr = getFractVar($1);
 							$$ = fractGenAssign(fr, $3); }
        ;
 %%
