@@ -1,7 +1,6 @@
 #include "fract.h"
 
 #include <string.h>
-#include <stdio.h>
 
 #include "tac.h"
 #include "list.h"
@@ -78,10 +77,10 @@ List* fractGenAssign(Fract* fract, List* list) {
 *			use 0 for subtraction, everything else for the addition.
 */
 List* fractGenSumSub(List* op1, List* op2, int sum) {
-	char* num1 = listGetSecToLast(op1)->risul;
-	char* den1 = listGetLast(op1)->risul;
-	char* num2 = listGetSecToLast(op2)->risul;
-	char* den2 = listGetLast(op2)->risul;
+	char* num1 = fractNumFromList(op1);
+	char* den1 = fractDenFromList(op1);
+	char* num2 = fractNumFromList(op2);
+	char* den2 = fractDenFromList(op2);
 
 	// t1 = num1 * den2
 	TAC *tac = genMul(num1, den2);
@@ -128,7 +127,6 @@ List* fractGenSumSub(List* op1, List* op2, int sum) {
 	return op1;
 }
 
-
 List* fractGenSum(List* op1, List* op2) {
 	return fractGenSumSub(op1, op2, 1);
 }
@@ -138,10 +136,10 @@ List* fractGenSub(List* op1, List* op2) {
 }
 
 List* fractGenMul(List* op1, List* op2) {
-	char* num1 = listGetSecToLast(op1)->risul;
-	char* den1 = listGetLast(op1)->risul;
-	char* num2 = listGetSecToLast(op2)->risul;
-	char* den2 = listGetLast(op2)->risul;
+	char* num1 = fractNumFromList(op1);
+	char* den1 = fractDenFromList(op1);
+	char* num2 = fractNumFromList(op2);
+	char* den2 = fractDenFromList(op2);
 
 	// num_ = num1 * num2
 	TAC* tac = genMul(num1, num2);
@@ -176,10 +174,10 @@ List* fractGenMul(List* op1, List* op2) {
 }
 
 List* fractGenDiv(List* op1, List* op2) {
-	char* num1 = listGetSecToLast(op1)->risul;
-	char* den1 = listGetLast(op1)->risul;
-	char* num2 = listGetSecToLast(op2)->risul;
-	char* den2 = listGetLast(op2)->risul;
+	char* num1 = fractNumFromList(op1);
+	char* den1 = fractDenFromList(op1);
+	char* num2 = fractNumFromList(op2);
+	char* den2 = fractDenFromList(op2);
 
 	// num_ = num1 * den2
 	TAC* tac = genMul(num1, den2);
@@ -213,140 +211,104 @@ List* fractGenDiv(List* op1, List* op2) {
 	return op1;
 }
 
-List * fractGenEQ(List* op1, List* op2){
+/**
+ * @brief Generates three address code instructions for equality
+ *			or ineqality comparison of fract op1 and fract op2.
+ *			--! This function assumes the fractions to be minimized !--
+ * @op1: list of instructions for the computation of the first fract.
+ * @op2: list of instructions for the computation of the second fract.
+ * @eq: flag stating if the two fracts must be tested for equality or 
+ *		  inequality, use 0 for inequality, everything else for equality.
+ */
+List* fractGenEQNE(List* op1, List* op2, int eq) {
+	char* num1 = fractNumFromList(op1);
+	char* den1 = fractDenFromList(op1);
+	char* num2 = fractNumFromList(op2);
+	char* den2 = fractDenFromList(op2);
 
-    char* num1 = listGetSecToLast(op1)->risul;
-	char* den1 = listGetLast(op1)->risul;
-	char* num2 = listGetSecToLast(op2)->risul;
-	char* den2 = listGetLast(op2)->risul;
+	// num_ = num1==num2
+	TAC* tac = (eq) ? genEQ(num1, num2) : genNE(num1, num2);
+	char* num_ = tac->risul;
+	List* list = listAlloc();
+	listAdd(list, tac);
 
-    //num_=num1==num2
-    TAC* tac = genEQ(num1, num2);
-    char* num_ = tac->risul;
-    List* list = listAlloc();
-    listAdd(list, tac);
+	// den = den1==den2
+	tac = (eq) ? genEQ(num1, num2) : genNE(num1, num2);
+	char* den_ = tac->risul;
+	listAdd(list, tac);
 
+	// resul = num_&&den_
+	tac = (eq) ? genAND(num1, num2) : genOR(num1, num2);
+	listAdd(list, tac);
 
-    //den=den1==den2
-    tac = genEQ(den1, den2);
-    char* den_ = tac->risul;
-    listAdd(list, tac);
+	listConcat(op1, op2);
+	listConcat(op1, list);
+	// TODO: free?
 
-
-    //resul=num_&&den_
-    tac = genAND(num_, den_);
-    listAdd(list, tac);
-
-    listConcat(op1, op2);
-    listConcat(op1, list);
-    //TODO free
-
-    return op1;
+	return op1;
 }
 
-
-
-List * fractGenNE(List* op1, List* op2){
-
-  List * NE=fractGenEQ(op1,op2);
-  listGeLast(NE)->op='!=';
-  return NE;
+List* fractGenEQ(List* op1, List* op2){
+	return fractGenEQNE(op1, op2, 1);
 }
 
+List* fractGenNE(List* op1, List* op2){
+	return fractGenEQNE(op1, op2, 0);
+}
 
+/**
+ * @brief Generates three address code instructions for less than,
+ *			 greater than, less or equal than, greater or equal than
+ *			 comparison of fract op1 and fract op2.
+ * @op1: list of instructions for the computation of the first fract.
+ * @op2: list of instructions for the computation of the second fract.
+ * @eq: flag stating how the two fracts must be compared: 0 for less than,
+ *		  1 for greater than, 2 for less than or equal, 3 for greater than 
+ *		  or equal.
+ */
+List* fractGenLTGTLEGE(List* op1, List* op2, int comparision) {
+	char* num1 = fractNumFromList(op1);
+	char* den1 = fractDenFromList(op1);
+	char* num2 = fractNumFromList(op2);
+	char* den2 = fractDenFromList(op2);
+	List* list = listAlloc();
+
+	// num_1 = num1*den2
+	TAC* tac = genMul(num1, den2);
+	char* num_1 = tac->risul;
+	listAdd(list, tac);
+
+	// num_2 = num2*den1
+	tac = genMul(num2, den1);
+	char* num_2 = tac->risul;
+	listAdd(list, tac);
+
+	switch (comparision) {
+		case 0: tac = genLT(num_1, num_2); break;
+		case 1: tac = genGT(num_1, num_2); break;
+		case 2: tac = genLE(num_1, num_2); break;
+		case 3: tac = genGE(num_1, num_2); break;
+	}
+	listAdd(list, tac);
+
+	listConcat(op1, op2);
+	listConcat(op1, list);
+
+	return op1;
+}
 
 List * fractGenLT(List* op1, List* op2){
-
-    char* num1 = listGetSecToLast(op1)->risul;
-	char* den1 = listGetLast(op1)->risul;
-	char* num2 = listGetSecToLast(op2)->risul;
-	char* den2 = listGetLast(op2)->risul;
-
-    //num_1=den2*num1
-    TAC* tac = genMul(num1, den2);
-    tac = genMul(den2, den1);
-    char* num _1= tac->risul;
-    listAdd(list, tac);
-
-    //num_2=den1*num2
-    tac = genMul(den1, num2);
-    char* num_2 = tac->risul;
-    listAdd(list, tac);
-
-    //risul=num_2>num_1
-    tac = genGT(num_2, num_1);
-    listAdd(list, tac);
-
-
-    listConcat(op1, op2);
-    listConcat(op1, list);
-
-    return op1;
+	return fractGenLTGTLEGE(op1, op2, 0);
 }
 
-
 List * fractGenGT(List* op1, List* op2){
-
-    char* num1 = listGetSecToLast(op1)->risul;
-	char* den1 = listGetLast(op1)->risul;
-	char* num2 = listGetSecToLast(op2)->risul;
-	char* den2 = listGetLast(op2)->risul;
-
-    //num_1=den2*num1
-    TAC* tac = genMul(num1, den2);
-    tac = genMul(den2, den1);
-    char* num_1 = tac->risul;
-    listAdd(list, tac);
-
-    //num_2=den1*num2
-    tac = genMul(den1, num2);
-    char* num_2 = tac->risul;
-    listAdd(list, tac);
-
-    //risul=num_2<num_1
-    tac = genLT(num_2,num_1);
-    listAdd(list, tac);
-
-
-    listConcat(op1, op2);
-    listConcat(op1, list);
-
-    return op1;
+	return fractGenLTGTLEGE(op1, op2, 1);
 }
 
 List * fractGenLE(List* op1, List* op2){
-
-  List * NE=fractGenEQ(op1,op2);
-  listGeLast(NE)->op='>=';
-  return NE;
+	return fractGenLTGTLEGE(op1, op2, 2);
 }
 
 List * fractGenGE(List* op1, List* op2){
-
-  List * NE=fractGenEQ(op1,op2);
-  listGeLast(NE)->op='<=';
-  return NE;
+	return fractGenLTGTLEGE(op1, op2, 3);
 }
-
-
-
-
-//new method for updating symboltable
-/*
-setFractVar(char * id, List * expr){
-char* num = listGetSecToLast(expr)->risul;
-char* den = listGetLast(expr)->risul;
-
-
-
-//t1 = setFractVar(id,num)
-TAC * tac = gensetNumVar(id,num);
-	listAdd(expr, tac);
-
-
-//t2 = setFratVar(id, den)
-tac = gensetDenVar(id,den);
-	listAdd(expr, tac);
-
-}
-*/

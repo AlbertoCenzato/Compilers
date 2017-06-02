@@ -56,12 +56,12 @@ TAC* genAssign(char* val) {
 /**
 *	Generates three address code for a generic binary operation
 */
-TAC* genOp(char* op1, char* op2, char* operand) {
+TAC* genOp(char* op1, char* oper, char* op2) {
 	TAC *tac = tacAlloc();
 	char* result = newVar();
 	tac->risul = result;
 	tac->op1 = op1;
-	tac->op = operand;
+	tac->op = oper;
 	tac->op2 = op2;
 
 	return tac;
@@ -69,76 +69,86 @@ TAC* genOp(char* op1, char* op2, char* operand) {
 
 
 TAC* genAdd(char* op1, char* op2) {
-	char* operand = (char*) malloc(2 * sizeof(char));
-	strcpy(operand, "+");
-	return genOp(op1, op2, operand);
+	char* oper = (char*) malloc(2 * sizeof(char));
+	strcpy(oper, "+");
+	return genOp(op1, oper, op2);
 }
 
 
 TAC* genSub(char* op1, char* op2) {
-	char* operand = (char*) malloc(2 * sizeof(char));
-	strcpy(operand, "-");
-	return genOp(op1, op2, operand);
+	char* oper = (char*) malloc(2 * sizeof(char));
+	strcpy(oper, "-");
+	return genOp(op1, oper, op2);
 }
 
 
 TAC* genMul(char* op1, char* op2) {
-	char* operand = (char*) malloc(2 * sizeof(char));
-	strcpy(operand, "*");
-	return genOp(op1, op2, operand);
+	char* oper = (char*) malloc(2 * sizeof(char));
+	strcpy(oper, "*");
+	return genOp(op1, oper, op2);
 }
 
 
 TAC* genDiv(char* op1, char* op2) {
-	char* operand = (char*) malloc(2 * sizeof(char));
-	strcpy(operand, "/");
-	return genOp(op1, op2, operand);
+	char* oper = (char*) malloc(2 * sizeof(char));
+	strcpy(oper, "/");
+	return genOp(op1, oper, op2);
 }
 
 
 TAC* genMCD(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, "MCD");
-	return genOp(op1,op2, operand);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "MCD");
+	return genOp(op1, oper, op2);
 }
 
 
 TAC* genEQ(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, "==");
-	return genOp(op1,operand,op2);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "==");
+	return genOp(op1, oper, op2);
 }
 
+TAC* genNE(char* op1, char* op2) {
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "!=");
+	return genOp(op1, oper, op2);
+}
 
 TAC* genAND(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, "&&");
-	return genOp(op1,operand,op2);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "&&");
+	return genOp(op1, oper, op2);
+}
+
+TAC* genOR(char* op1, char* op2) {
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "||");
+	return genOp(op1, oper, op2);
 }
 
 TAC* genLT(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, "<");
-	return genOp(op1,operand,op2);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "<");
+	return genOp(op1, oper, op2);
 }
 
 TAC* genGT(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, ">");
-	return genOp(op1,operand,op2);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, ">");
+	return genOp(op1, oper, op2);
 }
 
-
 TAC* genLE(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, "<=");
-	return genOp(op1,operand,op2);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, "<=");
+	return genOp(op1, oper, op2);
 }
 
 TAC* genGE(char* op1, char* op2) {
-	char* operand = (char*) malloc(3 * sizeof(char));
-	strcpy(operand, ">=");
-	return genOp(op1,operand,op2);
+	char* oper = (char*) malloc(3 * sizeof(char));
+	strcpy(oper, ">=");
+	return genOp(op1, oper, op2);
 }
 
 

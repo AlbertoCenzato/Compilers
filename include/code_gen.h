@@ -50,5 +50,53 @@ TAC* genDiv(char* op1, char* op2);
  */
 TAC* genMCD(char* op1, char* op2);
 
+/**
+ *	Generates three address code for equality comparision
+ * between operand op1 and operand op2
+ */
+TAC* genEQ(char* op1, char* op2);
+
+/**
+ *	Generates three address code for inequality comparision
+ * between operand op1 and operand op2
+ */
+TAC* genNE(char* op1, char* op2);
+
+/**
+ *	Generates three address code for logic and
+ * between operand op1 and operand op2
+ */
+TAC* genAND(char* op1, char* op2);
+
+/**
+ *	Generates three address code for logic or
+ * between operand op1 and operand op2
+ */
+TAC* genOR(char* op1, char* op2);
+
+/**
+ *	Generates three address code for less than comparision
+ * between operand op1 and operand op2
+ */
+TAC* genLT(char* op1, char* op2);
+
+/**
+ *	Generates three address code for greater than comparision
+ * between operand op1 and operand op2
+ */
+TAC* genGT(char* op1, char* op2);
+
+/**
+ *	Generates three address code for less than or equal comparision
+ * between operand op1 and operand op2
+ */
+TAC* genLE(char* op1, char* op2);
+
+/**
+ *	Generates three address code for greater than or equal comparision
+ * between operand op1 and operand op2
+ */
+TAC* genGE(char* op1, char* op2);
+
 
 #endif 	// CODE_GEN_H_
