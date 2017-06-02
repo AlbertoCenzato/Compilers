@@ -20,7 +20,7 @@ relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
 %%
 
-{ws}			    				{ ; }
+{ws}			    { ; }
 
 bool				 { yylval.str = strdup(yytext); return KW_BOOL;  }
 fract				 { yylval.str = strdup(yytext); return KW_FRACT; }
@@ -31,15 +31,15 @@ if|while|print  { printf("<KEYWORD,%s>\n", yytext); 		    }
 0|false	   	   { yylval.bool = 0; return BOOL; }
 [1-9][0-9]*|true	{ yylval.bool = 1; return BOOL; }
 
-"<"			    { return LT;  }
-">"			    { return GT;  }
+"<"			{ return LT;  }
+">"			{ return GT;  }
 "=="			{ return EQ;  }
 "<="			{ return LE;  }
 ">="			{ return GE;  }
 "!="			{ return NE;  }
 "&&"			{ return AND; }
 "||"			{ return OR;  }
-"!"				{ return NOT; }
+"!"		   { return NOT; }
 
 .|\n  			{ return yytext[0]; }
 
