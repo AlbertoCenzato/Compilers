@@ -1,7 +1,7 @@
 #include "fract.h"
 
-#include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "tac.h"
 #include "list.h"
@@ -21,7 +21,7 @@ List* fractGenDecl() {
 	List* list = listAlloc();
 	listAdd(list, genDecl());
 	listAdd(list, genDecl());
-
+	
 	return list;
 }
 
@@ -38,6 +38,16 @@ List* fractGenLiteral(Fract* fract) {
 	return list;
 }
 
+List* fractGenID(Fract* fract) {
+	List* list = listAlloc();
+	
+	TAC*  tac = genAssign(fract->num);
+	listAdd(list, tac);
+	tac = genAssign(fract->den);
+	listAdd(list, tac);
+
+	return list;
+}
 
 // TODO: improve this function
 List* fractGenAssign(Fract* fract, List* list) {

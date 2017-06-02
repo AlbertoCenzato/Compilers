@@ -4,12 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../extern_libs/uthash/uthash.h"
+#include "fract.h"
+
 // ---------- struct and union definitions ----------
 
 union varValue {
-	Fract fract;
-	Bool  bool;
+	Fract* fract;
+	Bool*  bool;
 };
+
+typedef union varValue varValue;
 
 struct variable {
 	const char *id;            // we'll use this field as the key 
@@ -34,6 +39,7 @@ variable* addVar(char *id ) {
 	if (var == NULL) {
 		var = (variable*) malloc(sizeof(variable));
 		var->id = id;
+		var->var = (varValue*) malloc(sizeof(varValue));
 		HASH_ADD_KEYPTR(hh, mySymbolTable, var->id, strlen(var->id), var);	// gives ownership of id to mySymbolTable
 	}
 	else {
@@ -61,11 +67,13 @@ variable* getVar(char *id) {
 void addFractVar(char *id) {
 	variable* var = addVar(id);
 	var->type = TYPE_FRACT;
+	var->var->fract = (Fract*) malloc(sizeof(Fract));
 }
 
 void addBoolVar(char *id) {
 	variable* var = addVar(id);
 	var->type = TYPE_BOOL;
+	var->var->bool = (Bool*) malloc(sizeof(Bool));
 }
 
 Fract* getFractVar(char* id) {
@@ -75,7 +83,7 @@ Fract* getFractVar(char* id) {
 		exit(-1);
 	}
 
-	return &(var->var->fract);
+	return var->var->fract;
 }
 
 Bool* getBoolVar(char* id) {
@@ -85,7 +93,7 @@ Bool* getBoolVar(char* id) {
 		exit(-1);
 	}
 
-	return &(var->var->bool);
+	return var->var->bool;
 }
 
 void setFractVar(char *id, char *num, char *den) {

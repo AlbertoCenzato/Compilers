@@ -2,11 +2,6 @@
 #include <ctype.h> 
 #include <stdio.h> 
 
-//#include "fract.h"
-//#include "list.h"
-#include "symbol_table.h"
-#include "tac.h"
-
 int yylex();
 void yyerror(char *s);
 
@@ -15,13 +10,15 @@ void yyerror(char *s);
 %code requires {
    #include "fract.h"
    #include "list.h"
+   #include "symbol_table.h"
+   #include "tac.h"
 }
 
 %union{
-	struct Fract fract;
-    struct List * code;
-	int   bool;
-	char* str;
+   Fract fract;
+   List * code;
+   int   bool;
+   char* str;
 }
 
 %token <str>   ID
@@ -29,10 +26,10 @@ void yyerror(char *s);
 %token <bool>  BOOL
 %token <str>   KW_FRACT
 %token <str>   KW_BOOL
+//%type  <code>  lines
 %type  <code>  expr
 %type  <bool>  bexpr
 %type  <bool>  comp
-
 %type <code> assign
 %type <code> declar
 
@@ -48,8 +45,8 @@ void yyerror(char *s);
 lines : lines expr  '\n'	{ listPrint($2); }
       //| lines bexpr '\n'	{ printf("%d\n", $2); }
       //| lines comp  '\n'	{ printf("%d\n", $2); }
-	  | lines declar '\n'	{ ; }
-	  | lines assign '\n'	{ ; }
+	   | lines declar '\n'	{ listPrint($2); }
+	   | lines assign '\n'	{ listPrint($2); }
       | /* empty */
       ;
 
@@ -59,7 +56,7 @@ expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | expr '*' expr	{ $$ = fractGenMul($1,$3); }
      | expr '/' expr	{ $$ = fractGenDiv($1,$3); }
      | '(' expr ')' 	{ $$ = $2; }
-     | ID 				{ $$ = getFractVar($1); }	// FIXME! this rule returns a Fract* instead of the expected List*!!
+     | ID 				{ $$ = fractGenID(getFractVar($1)); }
      | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 
@@ -87,15 +84,22 @@ comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
 	 */
 	  
 declar : KW_FRACT ID ';' { List* list = fractGenDecl();
-						   addFractVar($2);
-						   setFractVar($2, listGetSecToLast(list)->risul, listGetLast(list)->risul); }
+									addFractVar($2);
+									char* t1 = listGetSecToLast(list)->risul;
+									char* t2 = listGetLast(list)->risul;
+									setFractVar($2, t1, t2); 
+									$$ = list; }
        ;
 		 
 assign : ID '=' expr  ';' { Fract* fr = getFractVar($1);
-							$$ = fractGenAssign(fr, $3); }
+									 $$ = fractGenAssign(fr, $3); }
        ;
 %%
 
+int main() {
+	if (yyparse() != 0) 
+		fprintf(stderr, "%s\n\n", "Abnormal exit.");
 
-
+	return 0;
+}
 

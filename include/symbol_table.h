@@ -1,12 +1,11 @@
 #ifndef SYMBOL_TABLE_H_
 #define SYMBOL_TABLE_H_
 
-#include "../extern_libs/uthash/uthash.h"
-
-#include "fract.h"
-
 #define TYPE_FRACT 1024
 #define TYPE_BOOL  1025
+
+struct Fract;						// forward declaration
+typedef struct Fract Fract; 
 
 struct Bool {
 	char* value;

@@ -40,10 +40,17 @@ List* fractGenAssign(Fract* fract, List* list);
 //List* fractGenAssign(char* num, char* den, List* list);
 
 /**
- *	@brief Generates to temporay variables to store numerator
+ *	@brief Generates two temporay variables to store numerator
  *			 and denominator for a fract literal
  */
 List* fractGenLiteral(Fract* fract);
+
+/**
+ *	@brief Generates two temporary variables to store numerator
+ *			 and denominator for a fract identificator already present
+ *			 in the symbol table
+ */
+List* fractGenID(Fract* fract);
 
 /**
 * Generates three address code instructions for addition
