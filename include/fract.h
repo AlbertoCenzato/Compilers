@@ -76,4 +76,40 @@ List* fractGenMul(List* op1, List* op2);
 */
 List* fractGenDiv(List* op1, List* op2);
 
+/**
+ * Generates three address code instructions for equality
+ * comparision of fract op1 and fract op2.
+ */
+List* fractGenEQ(List* op1, List* op2);
+
+/**
+ * Generates three address code instructions for inequality
+ * comparision of fract op1 and fract op2.
+ */
+List* fractGenNE(List* op1, List* op2);
+
+/**
+ * Generates three address code instructions for less than
+ * comparision of fract op1 and fract op2.
+ */
+List * fractGenLT(List* op1, List* op2);
+
+/**
+ * Generates three address code instructions for greater than
+ * comparision of fract op1 and fract op2.
+ */
+List * fractGenGT(List* op1, List* op2);
+
+/**
+ * Generates three address code instructions for less than or equal
+ * comparision of fract op1 and fract op2.
+ */
+List * fractGenLE(List* op1, List* op2);
+
+/**
+ * Generates three address code instructions for greater than or equal
+ * comparision of fract op1 and fract op2.
+ */
+List * fractGenGE(List* op1, List* op2);
+
 #endif // FRACT_H_

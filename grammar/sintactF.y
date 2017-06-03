@@ -29,7 +29,7 @@ void yyerror(char *s);
 //%type  <code>  lines
 %type  <code>  expr
 %type  <bool>  bexpr
-%type  <bool>  comp
+%type  <code>  comp
 %type <code> assign
 %type <code> declar
 
@@ -42,11 +42,11 @@ void yyerror(char *s);
 
 %%
 
-lines : lines expr  '\n'	{ listPrint($2); }
-      //| lines bexpr '\n'	{ printf("%d\n", $2); }
-      //| lines comp  '\n'	{ printf("%d\n", $2); }
-	   | lines declar '\n'	{ listPrint($2); }
-	   | lines assign '\n'	{ listPrint($2); }
+lines : lines expr    '\n'	{ listPrint($2); }
+      //| lines bexpr '\n'	{ listPrint($2); }
+      | lines comp    '\n'	{ listPrint($2); }
+	   | lines declar  '\n'	{ listPrint($2); }
+	   | lines assign  '\n'	{ listPrint($2); }
       | /* empty */
       ;
 
@@ -73,15 +73,13 @@ bexpr : bexpr OR bexpr  { $$ = $1 || $3; }
       ;
 	  */
 
-	  /*
-comp : expr EQ expr { $$ =  ($1.num == $3.num) && ($1.den == $3.den); }
-     | expr NE expr { $$ =  ($1.num != $3.num) || ($1.den != $3.den); }
-     | expr LT expr { $$ =  fractLT($1,$3); }
-     | expr GT expr { $$ =  fractGT($1,$3); }
-     | expr LE expr { $$ =  fractLE($1,$3); }
-     | expr GE expr { $$ =  fractGE($1,$3); }
+comp : expr EQ expr { $$ = fractGenEQ($1,$3); }
+     | expr NE expr { $$ = fractGenNE($1,$3); }
+     | expr LT expr { $$ = fractGenLT($1,$3); }
+     | expr GT expr { $$ = fractGenGT($1,$3); }
+     | expr LE expr { $$ = fractGenLE($1,$3); }
+     | expr GE expr { $$ = fractGenGE($1,$3); }
      ;
-	 */
 	  
 declar : KW_FRACT ID ';' { List* list = fractGenDecl();
 									addFractVar($2);
