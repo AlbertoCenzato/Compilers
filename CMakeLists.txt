@@ -36,6 +36,7 @@ add_executable(${PROJECT_NAME}
 	${FLEX_lexer_OUTPUTS}
 	src/code_gen.c
 	src/fract.c
+	src/bool.c
 	src/list.c
 	src/symbol_table.c
 	src/tac.c

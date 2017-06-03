@@ -1,5 +1,5 @@
-#ifndef LIST_H_
-#define LIST_H_
+#ifndef F_LIST_H_
+#define F_LIST_H_
 
 struct ThreeAddressCode;	// forward declaration
 typedef struct ThreeAddressCode TAC;

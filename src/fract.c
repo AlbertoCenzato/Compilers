@@ -69,13 +69,13 @@ List* fractGenAssign(Fract* fract, List* list) {
 }
 
 /**
-* @brief Generates three address code instructions for addition
-*			or subtraction of fract op1 and fract op2.
-* @op1: list of instructions for the computation of the first fract.
-* @op2: list of instructions for the computation of the second fract.
-* @sum: flag stating if the two fracts must be added or subtracted,
-*			use 0 for subtraction, everything else for the addition.
-*/
+ * @brief Generates three address code instructions for addition
+ *			or subtraction of fract op1 and fract op2.
+ * @op1: list of instructions for the computation of the first fract.
+ * @op2: list of instructions for the computation of the second fract.
+ * @sum: flag stating if the two fracts must be added or subtracted,
+ *			use 0 for subtraction, everything else for the addition.
+ */
 List* fractGenSumSub(List* op1, List* op2, int sum) {
 	char* num1 = fractNumFromList(op1);
 	char* den1 = fractDenFromList(op1);

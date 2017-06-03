@@ -1,5 +1,5 @@
-#ifndef SYMBOL_TABLE_H_
-#define SYMBOL_TABLE_H_
+#ifndef F_SYMBOL_TABLE_H_
+#define F_SYMBOL_TABLE_H_
 
 #define TYPE_FRACT 1024
 #define TYPE_BOOL  1025
@@ -7,12 +7,7 @@
 struct Fract;						// forward declaration
 typedef struct Fract Fract; 
 
-struct Bool {
-	char* value;
-};
-
-
-typedef struct Bool  Bool;
+typedef char* Bool;
 
 /*
 * @brief Adds fract variable with identifier "id" to symbol table
@@ -33,7 +28,7 @@ Fract* getFractVar(char *id);
 /**
 * @brief Gets bool variable with identifier "id" from symbol table
 */
-Bool* getBoolVar(char *id);
+Bool getBoolVar(char *id);
 
 
 /**

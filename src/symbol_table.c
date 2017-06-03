@@ -11,7 +11,7 @@
 
 union varValue {
 	Fract* fract;
-	Bool*  bool;
+	Bool  bool;
 };
 
 typedef union varValue varValue;
@@ -73,7 +73,7 @@ void addFractVar(char *id) {
 void addBoolVar(char *id) {
 	variable* var = addVar(id);
 	var->type = TYPE_BOOL;
-	var->var->bool = (Bool*) malloc(sizeof(Bool));
+	var->var->bool = (Bool) malloc(sizeof(Bool));
 }
 
 Fract* getFractVar(char* id) {
@@ -86,7 +86,7 @@ Fract* getFractVar(char* id) {
 	return var->var->fract;
 }
 
-Bool* getBoolVar(char* id) {
+Bool getBoolVar(char* id) {
 	variable* var = getVar(id);
 	if (var->type != TYPE_BOOL) {
 		printf("ERROR: trying to access non bool variable %s as bool!\n", id);
@@ -103,6 +103,6 @@ void setFractVar(char *id, char *num, char *den) {
 }
 
 void setBoolVar(char *id, char *value) {
-	Bool *bl = getBoolVar(id);
-	bl->value = value;
+	Bool bl = getBoolVar(id);
+	bl = value;
 }

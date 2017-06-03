@@ -1,5 +1,5 @@
-#ifndef TAC_H_
-#define TAC_H_
+#ifndef F_TAC_H_
+#define F_TAC_H_
 
 struct ThreeAddressCode {
 	char* risul;

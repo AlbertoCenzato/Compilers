@@ -9,6 +9,7 @@ void yyerror(char *s);
 
 %code requires {
    #include "fract.h"
+	#include "bool.h"
    #include "list.h"
    #include "symbol_table.h"
    #include "tac.h"
@@ -27,9 +28,9 @@ void yyerror(char *s);
 %token <str>   KW_FRACT
 %token <str>   KW_BOOL
 //%type  <code>  lines
-%type  <code>  expr
-%type  <bool>  bexpr
-%type  <code>  comp
+%type <code> expr
+%type <code> bexpr
+%type <code> comp
 %type <code> assign
 %type <code> declar
 
@@ -42,11 +43,11 @@ void yyerror(char *s);
 
 %%
 
-lines : lines expr    '\n'	{ listPrint($2); }
-      //| lines bexpr '\n'	{ listPrint($2); }
-      | lines comp    '\n'	{ listPrint($2); }
-	   | lines declar  '\n'	{ listPrint($2); }
-	   | lines assign  '\n'	{ listPrint($2); }
+lines : lines expr   '\n'	{ listPrint($2); }
+      | lines bexpr  '\n'	{ listPrint($2); }
+      | lines comp   '\n'	{ listPrint($2); }
+	   | lines declar '\n'	{ listPrint($2); }
+	   | lines assign '\n'	{ listPrint($2); }
       | /* empty */
       ;
 
@@ -60,18 +61,13 @@ expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 
-// TODO: risolvere problema di type checking
-/*
-bexpr : bexpr OR bexpr  { $$ = $1 || $3; }
-      | bexpr AND bexpr { if ($1 == 1 && $3 == 1) $$ = 1; 
-						  else			  		  $$ = 0; }
-      | NOT bexpr 		{ if ($2 == 1 ) $$ = 0; 
-						  else          $$ = 1; }
+bexpr : bexpr OR bexpr  { $$ = boolGenOR ($1,$3); }
+      | bexpr AND bexpr { $$ = boolGenAND($1,$3); }
+      | NOT bexpr 		{ $$ = boolGenNOT($2); }
       | '(' bexpr ')'	{ $$ = $2; }
       | comp         	{ $$ = $1; }
-      | BOOL
+      //| BOOL
       ;
-	  */
 
 comp : expr EQ expr { $$ = fractGenEQ($1,$3); }
      | expr NE expr { $$ = fractGenNE($1,$3); }
@@ -81,6 +77,7 @@ comp : expr EQ expr { $$ = fractGenEQ($1,$3); }
      | expr GE expr { $$ = fractGenGE($1,$3); }
      ;
 	  
+// TODO: collapse this in a single function call
 declar : KW_FRACT ID ';' { List* list = fractGenDecl();
 									addFractVar($2);
 									char* t1 = listGetSecToLast(list)->risul;
