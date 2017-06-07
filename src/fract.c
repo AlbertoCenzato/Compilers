@@ -243,7 +243,6 @@ List* fractGenEQNE(List* op1, List* op2, int eq) {
 
 	listConcat(op1, op2);
 	listConcat(op1, list);
-	// TODO: free?
 
 	return op1;
 }

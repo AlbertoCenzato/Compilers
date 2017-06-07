@@ -94,29 +94,36 @@ void listAdd(List *list, TAC *tac) {
 
 void listConcat(List *list1, List *list2) {
 
-	if (list1->length > 1) {
-		Node *last = list1->secToLast->next;
-		last->next = list2->head;
-		if (list2->length > 1)
-			list1->secToLast = list2->secToLast;
-		else if (list2->length == 1)
-			list1->secToLast = list1->secToLast->next;
-		// if list2->length == 0 no action needed
-		list1->length += list2->length;
-	}
-	else if (list1->length == 1) {
-		list1->head->next = list2->head;
-		if (list2->length > 1)
-			list1->secToLast = list2->secToLast;
-		else if (list2->length == 1)
-			list1->secToLast = list1->head;
-		// if list2->length == 0 no action needed
-		list1->length += list2->length;
-	}
-	else {
+	if( list1->length == 0) {
 		free(list1);
 		list1 = list2;
+		list2 = NULL;
 	}
+	else {
+		if (list1->length > 1) {
+			Node *last = list1->secToLast->next;
+			last->next = list2->head;
+			if (list2->length > 1)
+				list1->secToLast = list2->secToLast;
+			else if (list2->length == 1)
+				list1->secToLast = list1->secToLast->next;
+			// if list2->length == 0 no action needed
+			list1->length += list2->length;
+		}
+		else if (list1->length == 1) {
+			list1->head->next = list2->head;
+			if (list2->length > 1)
+				list1->secToLast = list2->secToLast;
+			else if (list2->length == 1)
+				list1->secToLast = list1->head;
+			// if list2->length == 0 no action needed
+			list1->length += list2->length;
+		}
+
+		free(list2);
+		list2 = NULL;
+	}
+
 }
 
 void listPrint(List* list) {
