@@ -8,10 +8,10 @@
 #define CAPACITY_INCREMENT_RATE 1.7
 
 char** refList = NULL;
-unsigned int size = INITIAL_SIZE;
-unsigned int capacity = INITIAL_CAPACITY;
+int size = INITIAL_SIZE;
+int capacity = INITIAL_CAPACITY;
 
-unsigned int tacObjects = 0;
+int tacObjects = 0;
 
 struct ThreeAddressCode {
 	char* risul;
@@ -24,18 +24,18 @@ struct ThreeAddressCode {
 void expandRefList() {
 	capacity *= CAPACITY_INCREMENT_RATE;
 	char** newRefList = (char**) malloc(capacity * sizeof(char*));
-	for (unsigned int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; i++) {
 		newRefList[i] = refList[i];
 	}
 	free(refList);
 	refList = newRefList;
 }
 
-unsigned int findInRefList(char* str) {
-	unsigned int min = 0;
-	unsigned int max = size;
+int findInRefList(char* str) {
+	int min = 0;
+	int max = size;
 	while (min < max) {
-		unsigned int avrg = (min + max) / 2;
+		int avrg = (min + max) / 2;
 		if (refList[avrg] == str)
 			return avrg;
 		if (refList[avrg] < str) {
@@ -50,21 +50,27 @@ unsigned int findInRefList(char* str) {
 }
 
 void insertIntoRefList(char* str) {
-	if (size == capacity)
+	if (size == capacity) {
+		printf("Size == capacity, expanding refList\n");
 		expandRefList();
-	for (unsigned int i = size-1; i >= 0 && refList[i] > str; --i) {
-		refList[i + 1] = refList[i];
 	}
+
+	int index;
+	for (index = size - 1; index >= 0 && refList[index] < str; index++) {
+		refList[index + 1] = refList[index];
+	}
+	
+	refList[index+1] = str;
 }
 
 void removeFromRefList(char* str) {
-	unsigned int index = findInRefList(str);
+	int index = findInRefList(str);
 	if (index == -1)
 		return;
-	for (unsigned int i = index; i < size-1; ++i) {
+	for (int i = index; i < size-1; i++) {
 		refList[i] = refList[i + 1];
 	}
-	--size;
+	size--;
 }
 
 int hasBeenFreed(char* str) {
@@ -79,7 +85,7 @@ TAC* tacAlloc() {
 		refList = (char**) malloc(capacity * sizeof(char*));
 	}
 
-	++tacObjects;
+	tacObjects++;
 	return tac;
 }
 
@@ -111,7 +117,7 @@ void tacFree(TAC *tac) {
 	free(tac);
 	tac = NULL;
 
-	--tacObjects;
+	tacObjects--;
 
 	if (tacObjects == 0) {
 		free(refList);
