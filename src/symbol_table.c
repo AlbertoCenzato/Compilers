@@ -63,17 +63,26 @@ variable* getVar(char *id) {
 
 
 // ---------- public functions ----------
-
+/*
 void addFractVar(char *id) {
 	variable* var = addVar(id);
 	var->type = TYPE_FRACT;
 	var->var->fract = (Fract*) malloc(sizeof(Fract));
 }
+*/
+
+void addFractVar(char *id, char* num, char* den) {
+	variable* var = addVar(id);
+	var->type = TYPE_FRACT;
+	var->var->fract = (Fract*) malloc(sizeof(Fract));
+	var->var->fract->num = num;
+	var->var->fract->num = den;
+}
 
 void addBoolVar(char *id) {
 	variable* var = addVar(id);
 	var->type = TYPE_BOOL;
-	var->var->bool = (Bool) malloc(sizeof(Bool));
+	var->var->bool = (Bool) malloc(sizeof(Bool));	// FIXME!!!!
 }
 
 Fract* getFractVar(char* id) {

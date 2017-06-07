@@ -41,14 +41,14 @@ char* newVar() {
 
 TAC* genDecl() {
 	TAC* tac = tacAlloc();
-	tac->risul = newVar();
+	tacSetRes(tac, newVar());
 	return tac;
 }
 
 TAC* genAssign(char* val) {
 	TAC* tac = tacAlloc();
-	tac->risul = newVar();
-	tac->op1 = val;
+	tacSetRes(tac, newVar());
+	tacSetOp1(tac, val);
 
 	return tac;
 }
@@ -59,10 +59,10 @@ TAC* genAssign(char* val) {
 TAC* genBinaryOp(char* op1, char* oper, char* op2) {
 	TAC *tac = tacAlloc();
 	char* result = newVar();
-	tac->risul = result;
-	tac->op1 = op1;
-	tac->op = oper;
-	tac->op2 = op2;
+	tacSetRes(tac, result);
+	tacSetOp1(tac, op1);
+	tacSetOper(tac, oper);
+	tacSetOp2(tac, op2);
 
 	return tac;
 }
@@ -73,9 +73,9 @@ TAC* genBinaryOp(char* op1, char* oper, char* op2) {
 TAC* genUnaryOp(char* op1, char* oper) {
 	TAC *tac = tacAlloc();
 	char* result = newVar();
-	tac->risul = result;
-	tac->op = oper;
-	tac->op2 = op1;
+	tacSetRes(tac, result);
+	tacSetOper(tac, oper);
+	tacSetOp2(tac, op1);
 
 	return tac;
 }

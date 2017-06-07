@@ -79,9 +79,9 @@ comp : expr EQ expr { $$ = fractGenEQ($1,$3); }
 	  
 // TODO: collapse this in a single function call
 declar : KW_FRACT ID ';' { List* list = fractGenDecl();
-									addFractVar($2);
-									char* t1 = listGetSecToLast(list)->risul;
-									char* t2 = listGetLast(list)->risul;
+									addFractVar($2, NULL, NULL);
+									char* t1 = tacGetRes(listGetSecToLast(list));
+									char* t2 = tacGetRes(listGetLast(list));
 									setFractVar($2, t1, t2); 
 									$$ = list; }
        ;

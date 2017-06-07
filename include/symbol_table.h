@@ -12,7 +12,9 @@ typedef char* Bool;
 /*
 * @brief Adds fract variable with identifier "id" to symbol table
 */
-void addFractVar(char *id);
+//void addFractVar(char *id);
+
+void addFractVar(char* id, char* num, char* den);
 
 /**
 * @brief Adds bool variable with identifier "id" to symbol table

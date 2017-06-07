@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "tac.h"
-#include "code_gen.h"
 
 // ---------- Node private inner class ----------
 
@@ -133,40 +132,3 @@ void listPrint(List* list) {
 		node = node->next;
 	}
 }
-
-/*
-int main() {
-
-	//provo la lista
-	char op1[] = "10";
-	char op2[] = "5";
-	char two[] = "2";
-
-	TAC *prova = genAdd(op1, op2);
-	TAC *prova1 = genDiv(prova->risul, two);
-	TAC *prova2 = genMul(prova1->risul, op2);
-
-	List *list1 = listAlloc();
-	listAdd(list1, prova);
-
-	tacPrint(list1->head->val);
-
-	listAdd(list1, prova1);
-	tacPrint(listGetLast(list1));
-	listAdd(list1, prova2);
-	tacPrint(listGetLast(list1));
-
-	List *list2 = listAlloc();
-	TAC *prova4 = genMCD(prova->risul, op2);
-	listAdd(list2, prova4);
-
-	tacPrint(listGetLast(list2));
-
-	listConcat(list1, list2);
-
-	tacPrint(listGetLast(list1));
-
-	listFree(list1);
-
-}
-*/

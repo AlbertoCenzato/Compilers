@@ -5,7 +5,7 @@
 #include "code_gen.h"
 
 Bool boolFromList(List* list) {
-	return listGetLast(list)->risul;
+	return tacGetRes(listGetLast(list));
 }
 
 /**

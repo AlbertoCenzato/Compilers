@@ -8,11 +8,11 @@
 
 
 char* fractNumFromList(List* list) {
-	return listGetSecToLast(list)->risul;
+	return tacGetRes(listGetSecToLast(list));
 }
 
 char* fractDenFromList(List* list) {
-	return listGetLast(list)->risul;
+	return tacGetRes(listGetLast(list));
 }
 
 
@@ -54,13 +54,13 @@ List* fractGenAssign(Fract* fract, List* list) {
 	List* newList = listAlloc();
 
 	TAC* tac = tacAlloc();
-	tac->risul = fract->num;
-	tac->op1 = fractNumFromList(list);
+	tacSetRes(tac,fract->num);
+	tacSetOp1(tac, fractNumFromList(list));
 	listAdd(newList, tac);
 
 	tac = tacAlloc();
-	tac->risul = fract->den;
-	tac->op1 = fractDenFromList(list);
+	tacSetRes(tac, fract->den);
+	tacSetOp1(tac, fractDenFromList(list));
 	listAdd(newList, tac);
 
 	listConcat(list, newList);
@@ -84,13 +84,13 @@ List* fractGenSumSub(List* op1, List* op2, int sum) {
 
 	// t1 = num1 * den2
 	TAC *tac = genMul(num1, den2);
-	char* t1 = tac->risul;
+	char* t1 = tacGetRes(tac);
 	List *list = listAlloc();
 	listAdd(list, tac);
 
 	// t2 = num2 * den1
 	tac = genMul(num2, den1);
-	char* t2 = tac->risul;
+	char* t2 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// t3 = t1 +- t2
@@ -98,27 +98,27 @@ List* fractGenSumSub(List* op1, List* op2, int sum) {
 		tac = genAdd(t1, t2);
 	else
 		tac = genSub(t1, t2);
-	char* t3 = tac->risul;
+	char* t3 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	//  t4 = den1 * den2
 	tac = genMul(den1, den2);
-	char* t4 = tac->risul;
+	char* t4 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// t5 = mCD(t3, t4)
 	tac = genMCD(t3, t4);
-	char* t5 = tac->risul;
+	char* t5 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// t6 = t3 / t5
 	tac = genDiv(t3, t5);
-	char* t6 = tac->risul;
+	char* t6 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	//  t7 = t4 / t5
 	tac = genDiv(t4, t5);
-	char* t7 = tac->risul;
+	char* t7 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	listConcat(op1, op2);
@@ -143,28 +143,28 @@ List* fractGenMul(List* op1, List* op2) {
 
 	// num_ = num1 * num2
 	TAC* tac = genMul(num1, num2);
-	char* num_ = tac->risul;
+	char* num_ = tacGetRes(tac);
 	List* list = listAlloc();
 	listAdd(list, tac);
 
 	// den_ = den1 * den2
 	tac = genMul(den1, den2);
-	char* den_ = tac->risul;
+	char* den_ = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// m = mCD(num_, den_)
 	tac = genMCD(num_, den_);
-	char* m = tac->risul;
+	char* m = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// num = num_ / m
 	tac = genDiv(num_, m);
-	char* num = tac->risul;
+	char* num = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// den = den_ / m
 	tac = genDiv(den_, m);
-	char* den = tac->risul;
+	char* den = tacGetRes(tac);
 	listAdd(list, tac);
 
 	listConcat(op1, op2);
@@ -181,28 +181,28 @@ List* fractGenDiv(List* op1, List* op2) {
 
 	// num_ = num1 * den2
 	TAC* tac = genMul(num1, den2);
-	char* num_ = tac->risul;
+	char* num_ = tacGetRes(tac);
 	List* list = listAlloc();
 	listAdd(list, tac);
 
 	// den_ = den1 * num2
 	tac = genMul(den1, num2);
-	char* den_ = tac->risul;
+	char* den_ = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// m = mCD(num_, den_)
 	tac = genMCD(num_, den_);
-	char* m = tac->risul;
+	char* m = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// num = num_ / m
 	tac = genDiv(num_, m);
-	char* num = tac->risul;
+	char* num = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// den = den_ / m
 	tac = genDiv(den_, m);
-	char* den = tac->risul;
+	char* den = tacGetRes(tac);
 	listAdd(list, tac);
 
 	listConcat(op1, op2);
@@ -228,17 +228,17 @@ List* fractGenEQNE(List* op1, List* op2, int eq) {
 
 	// num_ = num1==num2
 	TAC* tac = (eq) ? genEQ(num1, num2) : genNE(num1, num2);
-	char* num_ = tac->risul;
+	char* num_ = tacGetRes(tac);
 	List* list = listAlloc();
 	listAdd(list, tac);
 
 	// den = den1==den2
-	tac = (eq) ? genEQ(num1, num2) : genNE(num1, num2);
-	char* den_ = tac->risul;
+	tac = (eq) ? genEQ(den1, den2) : genNE(den1, den2);
+	char* den_ = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// resul = num_&&den_
-	tac = (eq) ? genAND(num1, num2) : genOR(num1, num2);
+	tac = (eq) ? genAND(num_, den_) : genOR(num_, den_);
 	listAdd(list, tac);
 
 	listConcat(op1, op2);
@@ -274,12 +274,12 @@ List* fractGenLTGTLEGE(List* op1, List* op2, int comparision) {
 
 	// num_1 = num1*den2
 	TAC* tac = genMul(num1, den2);
-	char* num_1 = tac->risul;
+	char* num_1 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	// num_2 = num2*den1
 	tac = genMul(num2, den1);
-	char* num_2 = tac->risul;
+	char* num_2 = tacGetRes(tac);
 	listAdd(list, tac);
 
 	switch (comparision) {
