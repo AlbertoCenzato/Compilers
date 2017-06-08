@@ -1,18 +1,18 @@
 #ifndef F_BOOL_H_
 #define F_BOOL_H_
 
-struct List;
-typedef struct List List;
+struct CodeList;
+typedef struct CodeList CodeList;
 
 typedef char* Bool;
 
-Bool boolFromList(List* list);
+Bool boolFromList(CodeList* list);
 
-List* boolGenAND(List* op1, List* op2);
+CodeList* boolGenAND(CodeList* op1, CodeList* op2);
 
-List* boolGenOR(List* op1, List* op2);
+CodeList* boolGenOR(CodeList* op1, CodeList* op2);
 
-List* boolGenNOT(List* op1);
+CodeList* boolGenNOT(CodeList* op1);
 
 
 #endif // F_BOOL_H_

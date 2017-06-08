@@ -4,8 +4,8 @@
 struct ThreeAddressCode;
 typedef struct ThreeAddressCode TAC;
 
-struct List;
-typedef struct List List;
+struct CodeList;
+typedef struct CodeList CodeList;
 
 
 int stringLen(const char* str);

@@ -30,22 +30,22 @@ void nodeFree(Node *node) {
 
 
 // -------------------------------------------
-// ---------------- List ---------------------
+// ---------------- CodeList ---------------------
 // -------------------------------------------
 
-struct List {
+struct CodeList {
 	Node* head;
 	Node* secToLast;
 	int length;
 };
 
-List* listAlloc() {
-	List *newList = (List*) malloc(sizeof(List));
+CodeList* listAlloc() {
+	CodeList *newList = (CodeList*) malloc(sizeof(CodeList));
 	newList->length = 0;
 	return newList;
 }
 
-void listFree(List *list) {
+void listFree(CodeList *list) {
 	Node *head;
 	Node *next = list->head;
 	while (next != NULL) {
@@ -57,7 +57,7 @@ void listFree(List *list) {
 	free(list);
 }
 
-TAC* listGetLast(List* list) {
+TAC* listGetLast(CodeList* list) {
 	if (list->length > 1)
 		return list->secToLast->next->val;
 	if (list->length == 1)
@@ -65,13 +65,13 @@ TAC* listGetLast(List* list) {
 	return NULL;	
 }
 
-TAC* listGetSecToLast(List* list) {
+TAC* listGetSecToLast(CodeList* list) {
 	if (list->length > 1)
 		return list->secToLast->val;
 	return NULL;
 }
 
-void listAdd(List *list, TAC *tac) {
+void listAdd(CodeList *list, TAC *tac) {
 
 	Node *newNode = nodeAlloc(tac);
 
@@ -91,7 +91,7 @@ void listAdd(List *list, TAC *tac) {
 	list->length++;
 }
 
-void listConcat(List *list1, List *list2) {
+void listConcat(CodeList *list1, CodeList *list2) {
 
 	if( list1->length == 0) {
 		free(list1);
@@ -125,7 +125,7 @@ void listConcat(List *list1, List *list2) {
 
 }
 
-void listPrint(List* list) {
+void listPrint(CodeList* list) {
 	Node* node = list->head;
 	while(node != NULL) {
 		tacPrint(node->val);

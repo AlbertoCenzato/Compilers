@@ -34,6 +34,8 @@ void expandRefList() {
 int findInRefList(char* str) {
 	int min = 0;
 	int max = size;
+
+	// binary search
 	while (min < max) {
 		int avrg = (min + max) / 2;
 		if (refList[avrg] == str)
@@ -55,6 +57,7 @@ void insertIntoRefList(char* str) {
 		expandRefList();
 	}
 
+	// keep list sorted
 	int index;
 	for (index = size - 1; index >= 0 && refList[index] < str; index++) {
 		refList[index + 1] = refList[index];

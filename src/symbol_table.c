@@ -11,14 +11,14 @@
 
 union varValue {
 	Fract* fract;
-	Bool  bool;
+	Bool*  bool;
 };
 
 typedef union varValue varValue;
 
 struct variable {
 	const char *id;            // we'll use this field as the key 
-	union varValue* var;
+	union varValue value;
 	int type;
 	UT_hash_handle hh; // makes this structure hashable 
 };
@@ -39,7 +39,7 @@ variable* addVar(char *id ) {
 	if (var == NULL) {
 		var = (variable*) malloc(sizeof(variable));
 		var->id = id;
-		var->var = (varValue*) malloc(sizeof(varValue));
+		//var->value = (varValue*) malloc(sizeof(varValue));
 		HASH_ADD_KEYPTR(hh, mySymbolTable, var->id, strlen(var->id), var);	// gives ownership of id to mySymbolTable
 	}
 	else {
@@ -63,26 +63,19 @@ variable* getVar(char *id) {
 
 
 // ---------- public functions ----------
-/*
-void addFractVar(char *id) {
-	variable* var = addVar(id);
-	var->type = TYPE_FRACT;
-	var->var->fract = (Fract*) malloc(sizeof(Fract));
-}
-*/
 
 void addFractVar(char *id, char* num, char* den) {
 	variable* var = addVar(id);
 	var->type = TYPE_FRACT;
-	var->var->fract = (Fract*) malloc(sizeof(Fract));
-	var->var->fract->num = num;
-	var->var->fract->num = den;
+	var->value.fract = (Fract*) malloc(sizeof(Fract));
+	var->value.fract->num = num;
+	var->value.fract->num = den;
 }
 
-void addBoolVar(char *id) {
+void addBoolVar(char *id, char* value) {
 	variable* var = addVar(id);
 	var->type = TYPE_BOOL;
-	var->var->bool = (Bool) malloc(sizeof(Bool));	// FIXME!!!!
+	*(var->value.bool) = value;
 }
 
 Fract* getFractVar(char* id) {
@@ -92,17 +85,17 @@ Fract* getFractVar(char* id) {
 		exit(-1);
 	}
 
-	return var->var->fract;
+	return var->value.fract;
 }
 
-Bool getBoolVar(char* id) {
+Bool* getBoolVar(char* id) {
 	variable* var = getVar(id);
 	if (var->type != TYPE_BOOL) {
 		printf("ERROR: trying to access non bool variable %s as bool!\n", id);
 		exit(-1);
 	}
 
-	return var->var->bool;
+	return var->value.bool;
 }
 
 void setFractVar(char *id, char *num, char *den) {
@@ -112,6 +105,6 @@ void setFractVar(char *id, char *num, char *den) {
 }
 
 void setBoolVar(char *id, char *value) {
-	Bool bl = getBoolVar(id);
-	bl = value;
+	Bool* bl = getBoolVar(id);
+	*bl = value;
 }

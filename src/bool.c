@@ -4,7 +4,7 @@
 #include "tac.h"
 #include "code_gen.h"
 
-Bool boolFromList(List* list) {
+Bool boolFromList(CodeList* list) {
 	return tacGetRes(listGetLast(list));
 }
 
@@ -16,7 +16,7 @@ Bool boolFromList(List* list) {
 * @sum: flag stating the operation to be computed on the two booleans:
 *		  use 0 for AND, everityng else for OR.
 */
-List* boolGenANDOR(List* op1, List* op2, int or) {
+CodeList* boolGenANDOR(CodeList* op1, CodeList* op2, int or) {
 	char* bool1 = boolFromList(op1);
 	char* bool2 = boolFromList(op2);
 
@@ -27,15 +27,15 @@ List* boolGenANDOR(List* op1, List* op2, int or) {
 	return op1;
 }
 
-List* boolGenAND(List* op1, List* op2) {
+CodeList* boolGenAND(CodeList* op1, CodeList* op2) {
 	return boolGenANDOR(op1, op2, 0);
 }
 
-List* boolGenOR(List* op1, List* op2) {
+CodeList* boolGenOR(CodeList* op1, CodeList* op2) {
 	return boolGenANDOR(op1, op2, 1);
 }
 
-List* boolGenNOT(List* op1) {
+CodeList* boolGenNOT(CodeList* op1) {
 	char* bool1 = boolFromList(op1);
 
 	TAC* tac = genNOT(bool1);

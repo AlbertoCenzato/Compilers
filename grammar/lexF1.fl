@@ -14,7 +14,7 @@ void reduceFract(char *text, int len);
 ws			[ \t\r]
 number 	[0-9]+
 fract  	"["([ ])*{number}([ ])*"|"([ ])*{number}([ ])*"]"
-id	[A-Za-z]([A-Za-z]|[0-9]|[_-])*
+id	[A-Za-z]([A-Za-z]|[0-9]|_)*
 
 relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 

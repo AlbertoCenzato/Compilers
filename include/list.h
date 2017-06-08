@@ -4,28 +4,28 @@
 struct ThreeAddressCode;	// forward declaration
 typedef struct ThreeAddressCode TAC;
 
-struct List;	// forward declaration to keep private struct members
-typedef struct List List;
+struct CodeList;	// forward declaration to keep private struct members
+typedef struct CodeList CodeList;
 
-List* listAlloc();
+CodeList* listAlloc();
 
-void listFree(List *list);
+void listFree(CodeList *list);
 
 //funzione per trovare l'ultimo nodo della lista
-TAC* listGetLast(List* list);
+TAC* listGetLast(CodeList* list);
 
-TAC* listGetSecToLast(List* list);
+TAC* listGetSecToLast(CodeList* list);
 
 //funzione aggiungere elemento in coda
-void  listAdd(List *list, TAC *tac);
+void  listAdd(CodeList *list, TAC *tac);
 
 //unire due liste in cui l2 vene attaccata alla coda di l1
-void listConcat(List *list1, List *list2);
+void listConcat(CodeList *list1, CodeList *list2);
 
 /**
  *	@brief Prints a Three Address Code list to standard output
  *	@param list: list to be printed
  */
-void listPrint(List* list);
+void listPrint(CodeList* list);
 
 #endif // LIST_H_

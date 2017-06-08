@@ -17,7 +17,7 @@ void yyerror(char *s);
 
 %union{
    Fract fract;
-   List * code;
+   CodeList * code;
    int   bool;
    char* str;
 }
@@ -78,7 +78,7 @@ comp : expr EQ expr { $$ = fractGenEQ($1,$3); }
      ;
 	  
 // TODO: collapse this in a single function call
-declar : KW_FRACT ID ';' { List* list = fractGenDecl();
+declar : KW_FRACT ID ';' { CodeList* list = fractGenDecl();
 									addFractVar($2, NULL, NULL);
 									char* t1 = tacGetRes(listGetSecToLast(list));
 									char* t2 = tacGetRes(listGetLast(list));
