@@ -53,7 +53,7 @@ TAC* genAssign(char* val) {
 	TAC* tac = tacAlloc();
 	tacSetRes(tac, newTmpVariable());
 	tacSetOp1(tac, val);
-
+	
 	return tac;
 }
 

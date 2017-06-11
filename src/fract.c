@@ -5,6 +5,7 @@
 #include "tac.h"
 #include "code_list.h"
 #include "code_gen.h"
+#include <stdio.h>
 
 
 char* fractNumFromList(CodeList* list) {
@@ -54,7 +55,7 @@ CodeList* fractGenAssign(Fract* fract, CodeList* list) {
 	CodeList* newList = listAlloc();
 
 	TAC* tac = tacAlloc();
-	tacSetRes(tac,fract->num);
+	tacSetRes(tac, fract->num);
 	tacSetOp1(tac, fractNumFromList(list));
 	listAddBack(newList, tac);
 

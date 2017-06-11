@@ -100,6 +100,12 @@ void freeString(char* str) {
 
 TAC* tacAlloc() {
 	TAC* tac = (TAC*) malloc(sizeof(TAC));
+
+	tac->label	= NULL;
+	tac->result = NULL;
+	tac->op1		= NULL;
+	tac->op		= NULL;
+	tac->op2		= NULL;
 	
 	if (refList == NULL) {
 		refList = (void**) malloc(capacity * sizeof(void*));

@@ -51,7 +51,7 @@ void yyerror(char *s);
 
 %%
 
-program : block END_OF_FILE { printf("program : block END_OF_FILE\n"); listPrint($1); }
+program : block END_OF_FILE { listPrint($1); }
 
 /*
 lines : lines expr   '\n'	{ listPrint($2); }
@@ -63,28 +63,25 @@ lines : lines expr   '\n'	{ listPrint($2); }
       ;
 */
 
-block : block statement	{ printf("block : block statement\n"); 
-								  printf("backpatching...\n");
-								  listBackpatch($1, $2);
-								  printf("concatenation\n");
+block : block statement	{ listBackpatch($1, $2);
 								  $$ = listConcat($1, $2); }
-		| statement			{ printf("block : statement\n"); $$ = $1; }
+		| statement			{ $$ = $1; }
 		;
 
-statement : WHILE '(' bexpr ')' '{' block '}'							{ printf("statement : while\n"); }
-			 | IF	   '(' bexpr ')' '{' block '}'							{ printf("statement : if\n"); }
-			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ printf("statement : if else\n"); }
-			 | declar																{ printf("statement : declaration\n"); $$ = $1; }
-			 | assign																{ printf("statement : assignment\n");  $$ = $1; }
+statement : WHILE '(' bexpr ')' '{' block '}'							{ }
+			 | IF	   '(' bexpr ')' '{' block '}'							{ }
+			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ }
+			 | declar																{ $$ = $1; }
+			 | assign																{ $$ = $1; }
 			 ;
 
 // TODO: risolvere problema di type checking
-expr : expr '+' expr	{ printf("expr + expr"); $$ = fractGenSum($1,$3); }
+expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | expr '-' expr	{ $$ = fractGenSub($1,$3); }
      | expr '*' expr	{ $$ = fractGenMul($1,$3); }
      | expr '/' expr	{ $$ = fractGenDiv($1,$3); }
      | '(' expr ')' 	{ $$ = $2; }
-     | ID 				{ printf("ID"); $$ = fractGenID(getFractVar($1)); }
+     | ID 				{ $$ = fractGenID(getFractVar($1)); }
      | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 

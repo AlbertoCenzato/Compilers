@@ -138,11 +138,6 @@ CodeList* listConcat(CodeList* list1, CodeList* list2) {
 	if (list2 == NULL)
 		return list1;
 
-	printf("CONCATENATING:\n\nList 1:\n");
-	listPrint(list1);
-	printf("\nList 2:\n");
-	listPrint(list2);
-
 	listConcat(list1->nextlist, list2->nextlist);
 
 	if (list1->length == 0) {
