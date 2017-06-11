@@ -37,7 +37,7 @@ add_executable(${PROJECT_NAME}
 	src/code_gen.c
 	src/fract.c
 	src/bool.c
-	src/list.c
+	src/code_list.c
 	src/symbol_table.c
 	src/tac.c
 )

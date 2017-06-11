@@ -2,19 +2,21 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define INITIAL_SIZE 0
-#define INITIAL_CAPACITY 256
+#define INITIAL_CAPACITY 64
 #define CAPACITY_INCREMENT_RATE 1.7
 
-char** refList = NULL;
+void** refList = NULL;
 int size = INITIAL_SIZE;
 int capacity = INITIAL_CAPACITY;
 
 int tacObjects = 0;
 
 struct ThreeAddressCode {
-	char* risul;
+	char* label;
+	char* result;
 	char* op1;
 	char* op;
 	char* op2;
@@ -23,7 +25,7 @@ struct ThreeAddressCode {
 
 void expandRefList() {
 	capacity *= CAPACITY_INCREMENT_RATE;
-	char** newRefList = (char**) malloc(capacity * sizeof(char*));
+	void** newRefList = (void**) malloc(capacity * sizeof(void*));
 	for (int i = 0; i < size; i++) {
 		newRefList[i] = refList[i];
 	}
@@ -31,16 +33,22 @@ void expandRefList() {
 	refList = newRefList;
 }
 
-int findInRefList(char* str) {
+/**
+ *	@brief Performs a binary search on the reference list
+ *	@param ptr: the pointer to look for in the list
+ *	@return index of the element or, if not present, the index
+ *			  it should have once inserted
+ */
+int findInRefList(void* ptr) {
 	int min = 0;
 	int max = size;
 
 	// binary search
 	while (min < max) {
 		int avrg = (min + max) / 2;
-		if (refList[avrg] == str)
+		if (refList[avrg] == ptr)
 			return avrg;
-		if (refList[avrg] < str) {
+		if (refList[avrg] < ptr) {
 			min = avrg + 1;
 		}
 		else {
@@ -48,36 +56,45 @@ int findInRefList(char* str) {
 		}
 	}
 
-	return -1;
+	return min;
 }
 
-void insertIntoRefList(char* str) {
+void insertIntoRefList(void* ptr) {
+	
+	// if ptr is already present no action needed
+	int index = findInRefList(ptr);
+	if (refList[index] == ptr)
+		return;
+	
+	// if refList has reached its maximum capacity expand it
 	if (size == capacity) {
 		printf("Size == capacity, expanding refList\n");
 		expandRefList();
 	}
 
-	// keep list sorted
-	int index;
-	for (index = size - 1; index >= 0 && refList[index] < str; index++) {
-		refList[index + 1] = refList[index];
+	// insert ptr keeping refList sorted
+	for (int i = size - 1; i >= index; i--) {
+		refList[i + 1] = refList[i];
 	}
 	
-	refList[index+1] = str;
+	refList[index] = ptr;
+
+	size++;
 }
 
-void removeFromRefList(char* str) {
-	int index = findInRefList(str);
-	if (index == -1)
-		return;
+void removeFromRefList(int index) {
 	for (int i = index; i < size-1; i++) {
 		refList[i] = refList[i + 1];
 	}
 	size--;
 }
 
-int hasBeenFreed(char* str) {
-	return findInRefList(str) == -1;
+void freeString(char* str) {
+	int index = findInRefList(str);
+	if (refList[index] != str)
+		return;
+	free(str);
+	removeFromRefList(index);
 }
 
 
@@ -85,7 +102,8 @@ TAC* tacAlloc() {
 	TAC* tac = (TAC*) malloc(sizeof(TAC));
 	
 	if (refList == NULL) {
-		refList = (char**) malloc(capacity * sizeof(char*));
+		refList = (void**) malloc(capacity * sizeof(void*));
+		refList[0] = NULL;	// intialize to NULL first element to avoid problems when size == 0
 	}
 
 	tacObjects++;
@@ -96,43 +114,32 @@ void tacFree(TAC *tac) {
 	if (tac == NULL)
 		return;
 
-	if (!hasBeenFreed(tac->op)) {
-		free(tac->op);
-		removeFromRefList(tac->op);
-	}
-	if (!hasBeenFreed(tac->op1)) {
-		free(tac->op1);
-		removeFromRefList(tac->op1);
-	}
-	if (!hasBeenFreed(tac->op2)) {
-		free(tac->op2);
-		removeFromRefList(tac->op2);
-	}
-	if (!hasBeenFreed(tac->op2)) {
-		free(tac->op2);
-		removeFromRefList(tac->op2);
-	}
-	if (!hasBeenFreed(tac->risul)) {
-		free(tac->risul);
-		removeFromRefList(tac->risul);
-	}
-
+	freeString(tac->op);
+	freeString(tac->op1);
+	freeString(tac->op2);
+	freeString(tac->result);
+	freeString(tac->label);
+	
 	free(tac);
 	tac = NULL;
 
 	tacObjects--;
 
 	if (tacObjects == 0) {
+		for (int i = 0; i < size; i++)	// cleans up if any dangling string remained in ref list
+			free(refList[i]);
 		free(refList);
-		refList = NULL;
-		size = INITIAL_SIZE;
+		refList	= NULL;
+		size		= INITIAL_SIZE;
 		capacity = INITIAL_CAPACITY;
 	}
 }
 
 void tacPrint(TAC* tac) {
-	if (tac->risul != NULL)
-		printf("%s ", tac->risul);
+	if (tac->label != NULL)
+		printf("%s: ", tac->label);
+	if (tac->result != NULL)
+		printf("%s ", tac->result);
 	if (tac->op1 != NULL)
 		printf("= %s ", tac->op1);
 	if (tac->op != NULL)
@@ -141,6 +148,12 @@ void tacPrint(TAC* tac) {
 		printf("%s", tac->op2);
 	printf("\n");
 }
+
+void tacSetLabel(TAC* tac, char* label) {
+	tac->label = label;
+	insertIntoRefList(label);
+}
+
 
 void tacSetOp1(TAC* tac, char* op1) {
 	tac->op1 = op1;
@@ -158,7 +171,7 @@ void tacSetOper(TAC* tac, char* oper) {
 }
 
 void tacSetRes(TAC* tac, char* res) {
-	tac->risul = res;
+	tac->result = res;
 	insertIntoRefList(res);
 }
 
@@ -175,5 +188,17 @@ char* tacGetOper(TAC* tac) {
 }
 
 char* tacGetRes(TAC* tac) {
-	return tac->risul;
+	return tac->result;
+}
+
+
+
+// ---------- backpatch ----------
+
+void tacPatch(TAC *tac, char *label) {
+	int len = strlen(tac->op) + 1 + strlen(label) + 1;
+	char* op = (char*) malloc(len * sizeof(char));
+	snprintf(op, len, "%s %s", tac->op, label);
+	tac->op = op;
+	insertIntoRefList(op);
 }

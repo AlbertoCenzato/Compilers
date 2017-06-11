@@ -122,4 +122,10 @@ TAC* genOR(char* op1, char* op2);
  */
 TAC* genNOT(char* op1);
 
+
+
+// ---------- Backpatch ----------
+
+char* genNewLabel();
+
 #endif 	// CODE_GEN_H_

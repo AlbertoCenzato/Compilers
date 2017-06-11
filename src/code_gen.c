@@ -6,7 +6,8 @@
 
 #include "tac.h"
 
-int varCount = 1;
+int varCount	= 1;
+int labelCount = 1;
 
 int stringLen(const char* str) {
 	int count = -1;
@@ -15,39 +16,42 @@ int stringLen(const char* str) {
 	return count;
 }
 
-/*
-char* stringAlloc(const char* str) {
-	char* newString = malloc()
-}
-
-void stringFree(char* str) {
-	
-}
-*/
-
-char* newVar() {
+char* newTmpVariable() {
 
 	// count number of digits of varCount
 	int digits = 0;
 	for (int tmp = varCount; tmp > 0; tmp = tmp / 10) {
-		++digits;
+		digits++;
 	}
 
 	char* var = (char*) malloc((digits + 2) * sizeof(char));
 	sprintf(var, "t%d", varCount);	// sprintf always null terminates the string
-	++varCount;
+	varCount++;
 	return var;
+}
+
+char* genNewLabel() {
+	// count number of digits of labelCount
+	int digits = 0;
+	for (int tmp = labelCount; tmp > 0; tmp = tmp / 10) {
+		digits++;
+	}
+
+	char* label = (char*) malloc((digits + 2) * sizeof(char));
+	sprintf(label, "t%d", labelCount);	// sprintf always null terminates the string
+	labelCount++;
+	return label;
 }
 
 TAC* genDecl() {
 	TAC* tac = tacAlloc();
-	tacSetRes(tac, newVar());
+	tacSetRes(tac, newTmpVariable());
 	return tac;
 }
 
 TAC* genAssign(char* val) {
 	TAC* tac = tacAlloc();
-	tacSetRes(tac, newVar());
+	tacSetRes(tac, newTmpVariable());
 	tacSetOp1(tac, val);
 
 	return tac;
@@ -58,7 +62,7 @@ TAC* genAssign(char* val) {
  */
 TAC* genBinaryOp(char* op1, char* oper, char* op2) {
 	TAC *tac = tacAlloc();
-	char* result = newVar();
+	char* result = newTmpVariable();
 	tacSetRes(tac, result);
 	tacSetOp1(tac, op1);
 	tacSetOper(tac, oper);
@@ -72,7 +76,7 @@ TAC* genBinaryOp(char* op1, char* oper, char* op2) {
  */
 TAC* genUnaryOp(char* op1, char* oper) {
 	TAC *tac = tacAlloc();
-	char* result = newVar();
+	char* result = newTmpVariable();
 	tacSetRes(tac, result);
 	tacSetOper(tac, oper);
 	tacSetOp2(tac, op1);

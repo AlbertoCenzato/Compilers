@@ -22,7 +22,7 @@ CodeList* boolGenANDOR(CodeList* op1, CodeList* op2, int or) {
 
 	listConcat(op1, op2);
 	TAC* tac = or ? genOR(bool1, bool2) : genAND(bool1, bool2);
-	listAdd(op1, tac);
+	listAddBack(op1, tac);
 
 	return op1;
 }
@@ -39,7 +39,7 @@ CodeList* boolGenNOT(CodeList* op1) {
 	char* bool1 = boolFromList(op1);
 
 	TAC* tac = genNOT(bool1);
-	listAdd(op1, tac);
+	listAddBack(op1, tac);
 
 	return op1;
 }

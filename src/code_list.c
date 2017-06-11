@@ -1,8 +1,9 @@
-#include "list.h"
+#include "code_list.h"
 
 #include <stdlib.h>
 
 #include "tac.h"
+#include "code_gen.h"
 
 // ---------- Node private inner class ----------
 
@@ -26,6 +27,7 @@ void nodeFree(Node *node) {
 		return;
 	tacFree(node->val);
 	free(node);
+	node = NULL;
 }
 
 
@@ -36,16 +38,24 @@ void nodeFree(Node *node) {
 struct CodeList {
 	Node* head;
 	Node* secToLast;
+	CodeList* nextlist;
 	int length;
 };
 
 CodeList* listAlloc() {
 	CodeList *newList = (CodeList*) malloc(sizeof(CodeList));
+	newList->head = NULL;
+	newList->secToLast = NULL;
+	newList->nextlist = NULL;
 	newList->length = 0;
+
 	return newList;
 }
 
 void listFree(CodeList *list) {
+	if (list == NULL)
+		return;
+
 	Node *head;
 	Node *next = list->head;
 	while (next != NULL) {
@@ -54,7 +64,19 @@ void listFree(CodeList *list) {
 		nodeFree(head);
 	}
 
+	listFree(list->nextlist);
 	free(list);
+
+	list = NULL;
+}
+
+
+int listLength(CodeList *list) {
+	return list->length;
+}
+
+int listIsEmpty(CodeList *list) {
+	return list->length == 0;
 }
 
 TAC* listGetLast(CodeList* list) {
@@ -71,7 +93,7 @@ TAC* listGetSecToLast(CodeList* list) {
 	return NULL;
 }
 
-void listAdd(CodeList *list, TAC *tac) {
+void listAddBack(CodeList *list, TAC *tac) {
 
 	Node *newNode = nodeAlloc(tac);
 
@@ -89,6 +111,20 @@ void listAdd(CodeList *list, TAC *tac) {
 	}
 
 	list->length++;
+}
+
+TAC* listPopFront(CodeList* codeList) {
+	if (codeList->length < 1)
+		return NULL;
+
+	TAC* tac = codeList->head->val;
+	if (codeList->secToLast == codeList->head)
+		codeList->secToLast = NULL;
+	free(codeList->head);	// frees the node, not the Three Address Code it contains
+	codeList->head = codeList->head->next;
+	codeList->length--;
+
+	return tac;
 }
 
 void listConcat(CodeList *list1, CodeList *list2) {
@@ -125,10 +161,38 @@ void listConcat(CodeList *list1, CodeList *list2) {
 
 }
 
+void listAddToNextList(CodeList* codeList, TAC* tac) {
+	listAddBack(codeList->nextlist, tac);
+}
+
+CodeList* listGetNextList(CodeList* codeList) {
+	return codeList->nextlist;
+}
+
 void listPrint(CodeList* list) {
 	Node* node = list->head;
 	while(node != NULL) {
 		tacPrint(node->val);
 		node = node->next;
 	}
+}
+
+
+
+
+
+
+
+
+// ---------- backpatch ----------
+
+void listBackpatch(CodeList* unlabeledInstructions, CodeList* followingInstructions) {
+	CodeList* nextList = unlabeledInstructions->nextlist;
+	char* label = genNewLabel();
+	while (!listIsEmpty(nextList)) {
+		TAC* tac = listPopFront(nextList);
+		tacPatch(tac, label);
+	}
+
+	tacSetLabel(followingInstructions->head->val, label);
 }

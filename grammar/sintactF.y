@@ -51,6 +51,20 @@ lines : lines expr   '\n'	{ listPrint($2); }
       | /* empty */
       ;
 
+block : block statement	{ backpatch(block.nextlist, statement);
+									/* backpatch effettua il backpatching della nextlist di block
+										con la prossima label disponibile e la assegna alla
+										prima istruzione di statement */
+								  $$.nextlist = statement.nextlist; }
+		| statement			{ $$.nextlist = statement.nextlist; }
+		;
+
+statement : 'while' '(' bexpr ')' '{' block '}'	{ }
+			 | 'if'	  '(' bexpr ')' '{' block '}'	{ }
+			 | declaration									{ $$.nextlist = null; }
+			 | assign										{ $$.nextlist = null; }
+			 ;
+
 // TODO: risolvere problema di type checking
 expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
      | expr '-' expr	{ $$ = fractGenSub($1,$3); }
