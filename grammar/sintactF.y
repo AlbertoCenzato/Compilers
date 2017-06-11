@@ -10,7 +10,7 @@ void yyerror(char *s);
 %code requires {
    #include "fract.h"
 	#include "bool.h"
-   #include "list.h"
+   #include "code_list.h"
    #include "symbol_table.h"
    #include "tac.h"
 }
@@ -27,12 +27,20 @@ void yyerror(char *s);
 %token <bool>  BOOL
 %token <str>   KW_FRACT
 %token <str>   KW_BOOL
+%token <str>   IF
+%token <str>   ELSE
+%token <str>   WHILE
+%token <str>	END_OF_FILE
+
 //%type  <code>  lines
 %type <code> expr
 %type <code> bexpr
 %type <code> comp
 %type <code> assign
 %type <code> declar
+%type <code> block
+%type <code> statement
+%type <code> program
 
 %left '+' '-'
 %left '*' '/'
@@ -43,35 +51,40 @@ void yyerror(char *s);
 
 %%
 
+program : block END_OF_FILE { printf("program : block END_OF_FILE\n"); listPrint($1); }
+
+/*
 lines : lines expr   '\n'	{ listPrint($2); }
       | lines bexpr  '\n'	{ listPrint($2); }
       | lines comp   '\n'	{ listPrint($2); }
 	   | lines declar '\n'	{ listPrint($2); }
 	   | lines assign '\n'	{ listPrint($2); }
-      | /* empty */
+      | 
       ;
+*/
 
-block : block statement	{ backpatch(block.nextlist, statement);
-									/* backpatch effettua il backpatching della nextlist di block
-										con la prossima label disponibile e la assegna alla
-										prima istruzione di statement */
-								  $$.nextlist = statement.nextlist; }
-		| statement			{ $$.nextlist = statement.nextlist; }
+block : block statement	{ printf("block : block statement\n"); 
+								  printf("backpatching...\n");
+								  listBackpatch($1, $2);
+								  printf("concatenation\n");
+								  $$ = listConcat($1, $2); }
+		| statement			{ printf("block : statement\n"); $$ = $1; }
 		;
 
-statement : 'while' '(' bexpr ')' '{' block '}'	{ }
-			 | 'if'	  '(' bexpr ')' '{' block '}'	{ }
-			 | declaration									{ $$.nextlist = null; }
-			 | assign										{ $$.nextlist = null; }
+statement : WHILE '(' bexpr ')' '{' block '}'							{ printf("statement : while\n"); }
+			 | IF	   '(' bexpr ')' '{' block '}'							{ printf("statement : if\n"); }
+			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ printf("statement : if else\n"); }
+			 | declar																{ printf("statement : declaration\n"); $$ = $1; }
+			 | assign																{ printf("statement : assignment\n");  $$ = $1; }
 			 ;
 
 // TODO: risolvere problema di type checking
-expr : expr '+' expr	{ $$ = fractGenSum($1,$3); }
+expr : expr '+' expr	{ printf("expr + expr"); $$ = fractGenSum($1,$3); }
      | expr '-' expr	{ $$ = fractGenSub($1,$3); }
      | expr '*' expr	{ $$ = fractGenMul($1,$3); }
      | expr '/' expr	{ $$ = fractGenDiv($1,$3); }
      | '(' expr ')' 	{ $$ = $2; }
-     | ID 				{ $$ = fractGenID(getFractVar($1)); }
+     | ID 				{ printf("ID"); $$ = fractGenID(getFractVar($1)); }
      | FRACT			{ $$ = fractGenLiteral(&$1); }
      ;
 

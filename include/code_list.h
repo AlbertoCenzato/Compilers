@@ -48,7 +48,7 @@ void  listAddBack(CodeList *list, TAC *tac);
 TAC* listPopFront(CodeList* codeList);
 
 //unire due liste in cui l2 vene attaccata alla coda di l1
-void listConcat(CodeList *list1, CodeList *list2);
+CodeList* listConcat(CodeList* list1, CodeList* list2);
 
 /**
  *	@brief Adds an incomplete goto three address code instruction 
@@ -71,5 +71,15 @@ CodeList* listGetNextList(CodeList* codeList);
  *	@param list: list to be printed
  */
 void listPrint(CodeList* list);
+
+
+
+/**
+ *	@brief Effettua il backpatching della nextlist di unlabeledInstructions
+ *			 con la prossima label disponibile e la assegna alla prima istruzione 
+ *			 di followingInstructions
+ */
+void listBackpatch(CodeList* unlabeledInstructions, CodeList* followingInstructions);
+
 
 #endif // LIST_H_

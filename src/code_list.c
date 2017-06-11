@@ -1,6 +1,7 @@
 #include "code_list.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "tac.h"
 #include "code_gen.h"
@@ -32,7 +33,7 @@ void nodeFree(Node *node) {
 
 
 // -------------------------------------------
-// ---------------- CodeList ---------------------
+// ---------------- CodeList -----------------
 // -------------------------------------------
 
 struct CodeList {
@@ -56,12 +57,11 @@ void listFree(CodeList *list) {
 	if (list == NULL)
 		return;
 
-	Node *head;
 	Node *next = list->head;
 	while (next != NULL) {
-		head = next;
+		Node *prev = next;
 		next = next->next;
-		nodeFree(head);
+		nodeFree(prev);
 	}
 
 	listFree(list->nextlist);
@@ -127,10 +127,26 @@ TAC* listPopFront(CodeList* codeList) {
 	return tac;
 }
 
-void listConcat(CodeList *list1, CodeList *list2) {
+CodeList* listConcat(CodeList* list1, CodeList* list2) {
 
-	if( list1->length == 0) {
-		free(list1);
+	if (list1 == NULL) {
+		list1 = list2;
+		list2 = NULL;
+		return list1;
+	}
+
+	if (list2 == NULL)
+		return list1;
+
+	printf("CONCATENATING:\n\nList 1:\n");
+	listPrint(list1);
+	printf("\nList 2:\n");
+	listPrint(list2);
+
+	listConcat(list1->nextlist, list2->nextlist);
+
+	if (list1->length == 0) {
+		listFree(list1);
 		list1 = list2;
 		list2 = NULL;
 	}
@@ -159,6 +175,7 @@ void listConcat(CodeList *list1, CodeList *list2) {
 		list2 = NULL;
 	}
 
+	return list1;
 }
 
 void listAddToNextList(CodeList* codeList, TAC* tac) {
@@ -187,8 +204,11 @@ void listPrint(CodeList* list) {
 // ---------- backpatch ----------
 
 void listBackpatch(CodeList* unlabeledInstructions, CodeList* followingInstructions) {
+	if (unlabeledInstructions->nextlist == NULL)
+		return;
+
 	CodeList* nextList = unlabeledInstructions->nextlist;
-	char* label = genNewLabel();
+	char* label = genNewLabel();	// TODO: find a way to avoid the dependency upon code_gen.h
 	while (!listIsEmpty(nextList)) {
 		TAC* tac = listPopFront(nextList);
 		tacPatch(tac, label);

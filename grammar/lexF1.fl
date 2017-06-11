@@ -11,10 +11,10 @@ int mCDflex(int n1, int n2);
 void reduceFract(char *text, int len);
 %}
 
-ws			[ \t\r]
+ws			[ \t\r\n]
 number 	[0-9]+
 fract  	"["([ ])*{number}([ ])*"|"([ ])*{number}([ ])*"]"
-id	[A-Za-z]([A-Za-z]|[0-9]|_)*
+id			[A-Za-z]([A-Za-z]|[0-9]|_)*
 
 relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
@@ -24,7 +24,9 @@ relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
 bool				 { yylval.str = strdup(yytext); return KW_BOOL;  }
 fract				 { yylval.str = strdup(yytext); return KW_FRACT; }
-if|while|print  { printf("<KEYWORD,%s>\n", yytext); 		    }
+if					 { return IF; }
+else				 { return ELSE; }
+while				 { return WHILE; }
 
 {id}					{ yylval.str = strdup(yytext); return ID; }
 {fract}  			{ reduceFract(yytext, yyleng); return FRACT; }
@@ -41,7 +43,9 @@ if|while|print  { printf("<KEYWORD,%s>\n", yytext); 		    }
 "||"			{ return OR;  }
 "!"		   { return NOT; }
 
-.|\n  			{ return yytext[0]; }
+<<EOF>>		{ return END_OF_FILE; }
+
+.	 			{ return yytext[0]; }
 
 %%
 
