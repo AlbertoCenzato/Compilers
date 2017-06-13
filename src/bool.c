@@ -9,11 +9,11 @@ Bool boolFromList(CodeList* list) {
 }
 
 /**
-* @brief Generates three address code instructions for AND,
+* \brief Generates three address code instructions for AND,
 *			OR, NOT logic operations
-* @op1: list of instructions for the computation of the first boolean.
-* @op2: list of instructions for the computation of the second boolean.
-* @sum: flag stating the operation to be computed on the two booleans:
+* \op1: list of instructions for the computation of the first boolean.
+* \op2: list of instructions for the computation of the second boolean.
+* \sum: flag stating the operation to be computed on the two booleans:
 *		  use 0 for AND, everityng else for OR.
 */
 CodeList* boolGenANDOR(CodeList* op1, CodeList* op2, int or) {

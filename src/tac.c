@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define INITIAL_SIZE 0
 #define INITIAL_CAPACITY 64
@@ -195,16 +194,4 @@ char* tacGetOper(TAC* tac) {
 
 char* tacGetRes(TAC* tac) {
 	return tac->result;
-}
-
-
-
-// ---------- backpatch ----------
-
-void tacPatch(TAC *tac, char *label) {
-	int len = strlen(tac->op) + 1 + strlen(label) + 1;
-	char* op = (char*) malloc(len * sizeof(char));
-	snprintf(op, len, "%s %s", tac->op, label);
-	tac->op = op;
-	insertIntoRefList(op);
 }

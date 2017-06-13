@@ -40,6 +40,7 @@ add_executable(${PROJECT_NAME}
 	src/code_list.c
 	src/symbol_table.c
 	src/tac.c
+	src/ctrl_flow.c
 )
 
 ## Add cmake target dependencies of the executable

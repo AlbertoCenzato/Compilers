@@ -79,6 +79,10 @@ int listIsEmpty(CodeList *list) {
 	return list->length == 0;
 }
 
+TAC* listGetFirst(CodeList* list) {
+	return list->head->val;
+}
+
 TAC* listGetLast(CodeList* list) {
 	if (list->length > 1)
 		return list->secToLast->next->val;
@@ -187,27 +191,4 @@ void listPrint(CodeList* list) {
 		tacPrint(node->val);
 		node = node->next;
 	}
-}
-
-
-
-
-
-
-
-
-// ---------- backpatch ----------
-
-void listBackpatch(CodeList* unlabeledInstructions, CodeList* followingInstructions) {
-	if (unlabeledInstructions->nextlist == NULL)
-		return;
-
-	CodeList* nextList = unlabeledInstructions->nextlist;
-	char* label = genNewLabel();	// TODO: find a way to avoid the dependency upon code_gen.h
-	while (!listIsEmpty(nextList)) {
-		TAC* tac = listPopFront(nextList);
-		tacPatch(tac, label);
-	}
-
-	tacSetLabel(followingInstructions->head->val, label);
 }

@@ -8,11 +8,13 @@ void yyerror(char *s);
 %}
 
 %code requires {
+	#include "code_gen.h"
    #include "fract.h"
 	#include "bool.h"
    #include "code_list.h"
    #include "symbol_table.h"
    #include "tac.h"
+	#include "ctrl_flow.h"
 }
 
 %union{
@@ -53,23 +55,14 @@ void yyerror(char *s);
 
 program : block END_OF_FILE { listPrint($1); }
 
-/*
-lines : lines expr   '\n'	{ listPrint($2); }
-      | lines bexpr  '\n'	{ listPrint($2); }
-      | lines comp   '\n'	{ listPrint($2); }
-	   | lines declar '\n'	{ listPrint($2); }
-	   | lines assign '\n'	{ listPrint($2); }
-      | 
-      ;
-*/
-
-block : block statement	{ listBackpatch($1, $2);
+block : block statement	{ ctrlBackpatch($1, $2);
 								  $$ = listConcat($1, $2); }
 		| statement			{ $$ = $1; }
 		;
 
 statement : WHILE '(' bexpr ')' '{' block '}'							{ }
-			 | IF	   '(' bexpr ')' '{' block '}'							{ }
+			 | IF	   '(' bexpr ')' '{' block '}'							{ $$ = ctrlGenIf($3, $6); }
+
 			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ }
 			 | declar																{ $$ = $1; }
 			 | assign																{ $$ = $1; }
