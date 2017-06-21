@@ -4,11 +4,12 @@
 #include <math.h>
 #include <string.h>
 #include "parser.tab.h"
+#include "fract.h"
 
 extern YYSTYPE yylval;
 
-int mCDflex(int n1, int n2);
-void reduceFract(char *text, int len);
+//int mCDflex(int n1, int n2);
+//void reduceFract(char *text, int len);
 %}
 
 ws			[ \t\r\n]
@@ -29,7 +30,7 @@ else				 { return ELSE; }
 while				 { return WHILE; }
 
 {id}					{ yylval.str = strdup(yytext); return ID; }
-{fract}  			{ reduceFract(yytext, yyleng); return FRACT; }
+{fract}  			{ yylval.fract = fractLexicalAnalysis(yytext, yyleng); return FRACT; }
 0|false	   	   { yylval.bool = 0; return BOOL; }
 [1-9][0-9]*|true	{ yylval.bool = 1; return BOOL; }
 
@@ -48,68 +49,6 @@ while				 { return WHILE; }
 .	 			{ return yytext[0]; }
 
 %%
-
-void reduceFract(char *text, int len) {
-
-    char *p=text;
-	// look for optional sign
-	int sign = 0;
-	if ( *p == '+' | *p == '-' ) {
-		p++;
-		sign = 1;
-	}
-
-	// get the two number substrings
-	char *n1 = ++p;
-	while (*p != '|' )
-	  p++;
-	*p = '\0';
-	char *n2 = ++p;
-	text[len-1] = '\0';
-
-	// convert the substrings into int
-	int num = atoi(n1);
-	int den = atoi(n2);
-
-	// check if divide by zero. Should be placed in parser
-	if (den == 0) {
-		printf("Invalid fract! Division by 0 is NAN!\n");
-		return;	
-	}
-
-	int m = mCDflex(num,den);	// reduce num and den
-
-	num = num/m;
-	den = den/m;
-
-	int numDigits = 0;
-	for (int tmp = num; tmp > 0; tmp = tmp / 10) {
-		++numDigits;
-	}
-	int denDigits = 0;
-	for (int tmp = den; tmp > 0; tmp = tmp / 10) {
-		++denDigits;
-	}
-
-	char* numStr = (char*) malloc((numDigits+1)*sizeof(char));
-	char* denStr = (char*) malloc((denDigits+1)*sizeof(char));
-
-	sprintf(numStr, "%d", num);
-	sprintf(denStr, "%d", den);
-
-	yylval.fract.num = numStr;
-	yylval.fract.den = denStr;
-    
-	return;    
-}
-
-
-int mCDflex(int n1, int n2) {
-    if (n2==0)
-        return n1;
-    else
-        return mCDflex(n2, n1%n2);
-}
 
 /*
 int main() { 

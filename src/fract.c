@@ -1,12 +1,78 @@
 #include "fract.h"
 
+#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "tac.h"
 #include "code_list.h"
 #include "code_gen.h"
-#include <stdio.h>
 
+
+int mCD(int n1, int n2) {
+	if (n2 == 0)
+		return n1;
+	else
+		return mCD(n2, n1%n2);
+}
+
+Fract fractLexicalAnalysis(char *text, int len) {
+
+	char *p = text;
+	// look for optional sign
+	int sign = 0;
+	if (*p == '+' | *p == '-') {
+		p++;
+		sign = 1;
+	}
+
+	// get the two number substrings
+	char *n1 = ++p;
+	while (*p != '|')
+		p++;
+	*p = '\0';
+	char *n2 = ++p;
+	text[len - 1] = '\0';
+
+	// convert the substrings into int
+	int num = atoi(n1);
+	int den = atoi(n2);
+
+	// check if divide by zero. Should be placed in parser
+	if (den == 0) {
+		printf("Invalid fract! Division by 0 is NAN!\n");
+		Fract fract;
+		fract.num = NULL;
+		fract.den = NULL;
+		return fract;
+	}
+
+	int m = mCD(num, den);	// reduce num and den
+
+	num = num / m;
+	den = den / m;
+
+	int numDigits = 0;
+	for (int tmp = num; tmp > 0; tmp = tmp / 10) {
+		++numDigits;
+	}
+	int denDigits = 0;
+	for (int tmp = den; tmp > 0; tmp = tmp / 10) {
+		++denDigits;
+	}
+
+	char* numStr = (char*) malloc((numDigits + 1) * sizeof(char));
+	char* denStr = (char*) malloc((denDigits + 1) * sizeof(char));
+
+	sprintf(numStr, "%d", num);
+	sprintf(denStr, "%d", den);
+
+	Fract fract;
+	fract.num = numStr;
+	fract.den = denStr;
+
+	return fract;
+}
 
 char* fractNumFromList(CodeList* list) {
 	return tacGetRes(listGetSecToLast(list));

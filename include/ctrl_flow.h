@@ -13,6 +13,14 @@ typedef struct CodeList CodeList;
  */
 CodeList* ctrlGenIf(CodeList* bexpr, CodeList* block);
 
+/**
+*	\brief Generates three address code for an if-else statement
+*	\param bexpr: boolean expression used as if condition
+*	\param iftrue:  instructions executed when bexpr evaluates to true
+*	\param iffalse: instructions executed when bexpr evaluates to false
+*/
+CodeList* ctrlGenIfElse(CodeList* bexpr, CodeList* iftrue, CodeList* iffalse);
+
 
 /**
  *	\brief Effettua il backpatching della nextlist di unlabeledInstructions

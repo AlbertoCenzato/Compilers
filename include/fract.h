@@ -12,6 +12,8 @@ struct Fract {
 
 typedef struct Fract Fract;
 
+Fract fractLexicalAnalysis(char *text, int len);
+
 /**
 *	\brief retireves the numerator of the fract represented
 *			 by a sequence of Three Addrress Code instructions

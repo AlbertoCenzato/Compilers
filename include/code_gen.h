@@ -20,7 +20,7 @@
 #define GEN_NOT "!"
 
 #define GEN_GOTO	 "GOTO"
-#define GEN_GOTOIFZ "GOTOIFZ"
+#define GEN_GOTOIFNZ "GOTOIFNZ"
 
 struct ThreeAddressCode;
 typedef struct ThreeAddressCode TAC;

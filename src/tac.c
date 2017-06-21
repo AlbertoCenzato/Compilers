@@ -28,6 +28,9 @@ void expandRefList() {
 	for (int i = 0; i < size; i++) {
 		newRefList[i] = refList[i];
 	}
+	for (int i = size; i < capacity; i++) {
+		newRefList[i] = NULL;
+	}
 	free(refList);
 	refList = newRefList;
 }
@@ -47,7 +50,7 @@ int findInRefList(void* ptr) {
 		int avrg = (min + max) / 2;
 		if (refList[avrg] == ptr)
 			return avrg;
-		if (refList[avrg] < ptr) {
+		if (refList[avrg] < ptr && refList[avrg] != NULL) {
 			min = avrg + 1;
 		}
 		else {
@@ -60,6 +63,9 @@ int findInRefList(void* ptr) {
 
 void insertIntoRefList(void* ptr) {
 	
+	if (ptr == NULL)	// inserting null pointers is useless and harmful
+		return;
+
 	// if refList has reached its maximum capacity expand it
 	if (size == capacity) {
 		printf("Size == capacity, expanding refList\n");
@@ -108,7 +114,9 @@ TAC* tacAlloc() {
 	
 	if (refList == NULL) {
 		refList = (void**) malloc(capacity * sizeof(void*));
-		refList[0] = NULL;	// intialize to NULL first element to avoid problems when size == 0
+		for (int i = 0; i < capacity; i++) {
+			refList[i] = NULL;	// intialize to NULL first element to avoid problems when size == 0
+		}
 	}
 
 	tacObjects++;
@@ -145,8 +153,10 @@ void tacPrint(TAC* tac) {
 		printf("%s: ", tac->label);
 	if (tac->result != NULL)
 		printf("%s ", tac->result);
+	if (tac->result != NULL && tac->op1 != NULL)
+		printf("= ");
 	if (tac->op1 != NULL)
-		printf("= %s ", tac->op1);
+		printf("%s ", tac->op1);
 	if (tac->op != NULL)
 		printf("%s ", tac->op);
 	if (tac->op2 != NULL)

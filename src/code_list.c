@@ -1,10 +1,8 @@
 #include "code_list.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "tac.h"
-#include "code_gen.h"
 
 // ---------- Node private inner class ----------
 

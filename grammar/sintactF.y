@@ -65,7 +65,7 @@ block : block statement	{ ctrlBackpatch($1, $2);
 statement : WHILE '(' bexpr ')' '{' block '}'							{ }
 			 | IF	   '(' bexpr ')' '{' block '}'							{ $$ = ctrlGenIf($3, $6); }
 
-			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ }
+			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ $$ = ctrlGenIfElse($3,$6,$10); }
 			 | declar																{ $$ = $1; }
 			 | assign																{ $$ = $1; }
 			 ;
