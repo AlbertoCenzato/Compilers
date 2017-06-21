@@ -53,7 +53,9 @@ void yyerror(char *s);
 
 %%
 
-program : block END_OF_FILE { listPrint($1); }
+program : block END_OF_FILE { listPrint($1); 
+										listFree($1); 
+										return 0; }
 
 block : block statement	{ ctrlBackpatch($1, $2);
 								  $$ = listConcat($1, $2); }

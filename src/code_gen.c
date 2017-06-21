@@ -38,7 +38,7 @@ char* genNewLabel() {
 	}
 
 	char* label = (char*) malloc((digits + 2) * sizeof(char));
-	sprintf(label, "t%d", labelCount);	// sprintf always null terminates the string
+	sprintf(label, "L%d", labelCount);	// sprintf always null terminates the string
 	labelCount++;
 	return label;
 }

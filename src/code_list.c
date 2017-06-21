@@ -47,8 +47,15 @@ CodeList* listAlloc() {
 	CodeList *newList = (CodeList*) malloc(sizeof(CodeList));
 	newList->head = NULL;
 	newList->secToLast = NULL;
-	newList->nextlist = NULL;
 	newList->length = 0;
+
+	CodeList* nextlist = (CodeList*) malloc(sizeof(CodeList)); // alloc manually to avoid infinite recursion
+	nextlist->nextlist  = NULL;
+	nextlist->head		  = NULL;
+	nextlist->secToLast = NULL;
+	nextlist->length = 0;
+
+	newList->nextlist = nextlist;
 
 	return newList;
 }
@@ -124,8 +131,9 @@ TAC* listPopFront(CodeList* codeList) {
 	TAC* tac = codeList->head->val;
 	if (codeList->secToLast == codeList->head)
 		codeList->secToLast = NULL;
-	free(codeList->head);	// frees the node, not the Three Address Code it contains
-	codeList->head = codeList->head->next;
+	Node* oldHead = codeList->head;	
+	codeList->head = oldHead->next;
+	free(oldHead);	// frees the node, not the Three Address Code it contains
 	codeList->length--;
 
 	return tac;
@@ -142,7 +150,9 @@ CodeList* listConcat(CodeList* list1, CodeList* list2) {
 	if (list2 == NULL)
 		return list1;
 
-	listConcat(list1->nextlist, list2->nextlist);
+	CodeList* newNextList = listConcat(list1->nextlist, list2->nextlist);
+	list1->nextlist = NULL;
+	list2->nextlist = NULL;
 
 	if (list1->length == 0) {
 		listFree(list1);
@@ -173,6 +183,8 @@ CodeList* listConcat(CodeList* list1, CodeList* list2) {
 		free(list2);
 		list2 = NULL;
 	}
+
+	list1->nextlist = newNextList;
 
 	return list1;
 }

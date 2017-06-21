@@ -46,7 +46,7 @@ void patchTAC(TAC *tac, char *label) {
 void ctrlBackpatch(CodeList* unlabeledInstructions, CodeList* followingInstructions) {
 	
 	CodeList* nextList = listGetNextList(unlabeledInstructions);
-	if (nextList == NULL)
+	if (listIsEmpty(nextList))
 		return;
 
 	char* label = genNewLabel();
