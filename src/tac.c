@@ -60,17 +60,17 @@ int findInRefList(void* ptr) {
 
 void insertIntoRefList(void* ptr) {
 	
-	// if ptr is already present no action needed
-	int index = findInRefList(ptr);
-	if (refList[index] == ptr)
-		return;
-	
 	// if refList has reached its maximum capacity expand it
 	if (size == capacity) {
 		printf("Size == capacity, expanding refList\n");
 		expandRefList();
 	}
 
+	// if ptr is already present no action needed
+	int index = findInRefList(ptr);
+	if (refList[index] == ptr)
+		return;
+	
 	// insert ptr keeping refList sorted
 	for (int i = size - 1; i >= index; i--) {
 		refList[i + 1] = refList[i];

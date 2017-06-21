@@ -115,7 +115,7 @@ TAC* genDiv(char* op1, char* op2) {
 
 
 TAC* genMCD(char* op1, char* op2) {
-	char* oper = (char*) malloc(3 * sizeof(char));
+	char* oper = (char*) malloc(4 * sizeof(char));
 	strcpy(oper, GEN_MCD);
 	return genBinaryOp(op1, oper, op2);
 }
