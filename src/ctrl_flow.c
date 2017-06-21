@@ -1,19 +1,11 @@
 #include "ctrl_flow.h"
 
-#include <stddef.h>
 #include <string.h>
 
 #include "code_gen.h"
 #include "code_list.h"
 #include "tac.h"
 #include "bool.h"
-
-/*
-CodeList* ctrlGenConditionalJump(CodeList* booleanExpr, char* label) {
-	Bool b = boolFromList(booleanExpr);
-	TAC* tac = genConditionalGoto(b, label);
-}
-*/
 
 CodeList* ctrlGenIf(CodeList* bexpr, CodeList* block) {
 	char* blockLabel = genNewLabel();
@@ -53,6 +45,26 @@ CodeList* ctrlGenIfElse(CodeList* bexpr, CodeList* iftrue, CodeList* iffalse) {
 	listAddToNextList(iffalse, tac);
 
 	return listConcat(listConcat(bexpr, iftrue), iffalse);
+}
+
+CodeList* ctrlGenWhile(CodeList* bexpr, CodeList* block) {
+	char* bexprLabel = genNewLabel();
+	char* blockLabel = genNewLabel();
+
+	tacSetLabel(listGetFirst(bexpr), bexprLabel);
+
+	TAC* tac = genConditionalGoto(boolFromList(bexpr), blockLabel);
+	listAddBack(bexpr, tac);
+	tacSetLabel(listGetFirst(block), blockLabel);
+
+	tac = genGoto(NULL);
+	listAddBack(bexpr, tac);
+	listAddToNextList(bexpr, tac);
+
+	tac = genGoto(bexprLabel);
+	listAddBack(block, tac);
+
+	return listConcat(bexpr, block);
 }
 
 

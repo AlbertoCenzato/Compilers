@@ -4,7 +4,6 @@
 struct CodeList;
 typedef struct CodeList CodeList;
 
-//CodeList* ctrlGenConditionalJump(CodeList* booleanExpr, char* label);
 
 /**
  *	\brief Generates three address code for an if statement
@@ -20,6 +19,14 @@ CodeList* ctrlGenIf(CodeList* bexpr, CodeList* block);
 *	\param iffalse: instructions executed when bexpr evaluates to false
 */
 CodeList* ctrlGenIfElse(CodeList* bexpr, CodeList* iftrue, CodeList* iffalse);
+
+
+/**
+*	\brief Generates three address code for a while loop
+*	\param bexpr: boolean expression used as cycle condition
+*	\param block: instructions contained in the cycle body
+*/
+CodeList* ctrlGenWhile(CodeList* bexpr, CodeList* block);
 
 
 /**

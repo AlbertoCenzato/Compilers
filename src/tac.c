@@ -36,9 +36,9 @@ void expandRefList() {
 }
 
 /**
- *	@brief Performs a binary search on the reference list
- *	@param ptr: the pointer to look for in the list
- *	@return index of the element or, if not present, the index
+ *	\brief Performs a binary search on the reference list
+ *	\param ptr: the pointer to look for in the list
+ *	\return index of the element or, if not present, the index
  *			  it should have once inserted
  */
 int findInRefList(void* ptr) {
