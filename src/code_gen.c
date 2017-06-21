@@ -194,7 +194,7 @@ TAC* genConditionalGoto(char* op1, char* op2) {
 	TAC* tac = tacAlloc();
 	tacSetOp1(tac,op1);
 	tacSetOp2(tac, op2);
-	char* oper = (char*) malloc(8 * sizeof(char));
+	char* oper = (char*) malloc(9 * sizeof(char));
 	strcpy(oper, GEN_GOTOIFNZ);
 	tacSetOper(tac, oper);
 

@@ -88,9 +88,18 @@ void insertIntoRefList(void* ptr) {
 }
 
 void removeFromRefList(int index) {
+
+	if (index >= size)
+		return;
+
 	for (int i = index; i < size-1; i++) {
 		refList[i] = refList[i + 1];
 	}
+
+	// sets to null freed cells to avoid double free when tacObjects == 0
+	//	and to avoid errors when inserting a new pointer in refList
+	refList[size-1] = NULL;
+
 	size--;
 }
 
@@ -100,6 +109,8 @@ void freeString(char* str) {
 		return;
 	free(str);
 	removeFromRefList(index);
+
+	str = NULL;
 }
 
 
