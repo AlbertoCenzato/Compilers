@@ -39,18 +39,22 @@ struct CodeList {
 	Node* secToLast;
 	CodeList* nextlist;
 	int length;
+
+	Node* iter;
 };
 
 CodeList* listAlloc() {
 	CodeList *newList = (CodeList*) malloc(sizeof(CodeList));
 	newList->head = NULL;
 	newList->secToLast = NULL;
+	newList->iter = NULL;
 	newList->length = 0;
 
 	CodeList* nextlist = (CodeList*) malloc(sizeof(CodeList)); // alloc manually to avoid infinite recursion
 	nextlist->nextlist  = NULL;
 	nextlist->head		  = NULL;
 	nextlist->secToLast = NULL;
+	nextlist->iter		  = NULL;
 	nextlist->length = 0;
 
 	newList->nextlist = nextlist;
@@ -82,6 +86,22 @@ int listLength(CodeList *list) {
 
 int listIsEmpty(CodeList *list) {
 	return list->length == 0;
+}
+
+int listHasNext(CodeList* list) {
+	return list->iter != NULL;
+}
+
+TAC* listGetNext(CodeList* list) {
+	if (list->iter == NULL)
+		return NULL;
+	TAC* tac = list->iter->val;
+	list->iter = list->iter->next;
+	return tac;
+}
+
+void listBegin(CodeList* list) {
+	list->iter = list->head;
 }
 
 TAC* listGetFirst(CodeList* list) {
@@ -117,6 +137,7 @@ void listAddBack(CodeList *list, TAC *tac) {
 	}
 	else {
 		list->head = newNode;
+		list->iter = newNode;
 	}
 
 	list->length++;
@@ -183,6 +204,7 @@ CodeList* listConcat(CodeList* list1, CodeList* list2) {
 	}
 
 	list1->nextlist = newNextList;
+	list1->iter = list1->head;
 
 	return list1;
 }

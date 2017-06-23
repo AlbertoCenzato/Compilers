@@ -41,6 +41,7 @@ add_executable(${PROJECT_NAME}
 	src/symbol_table.c
 	src/tac.c
 	src/ctrl_flow.c
+	src/backend.c
 )
 
 ## Compiler flags

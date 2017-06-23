@@ -24,15 +24,10 @@ struct ThreeAddressCode {
 
 void expandRefList() {
 	capacity *= CAPACITY_INCREMENT_RATE;
-	void** newRefList = (void**) malloc(capacity * sizeof(void*));
-	for (int i = 0; i < size; i++) {
-		newRefList[i] = refList[i];
-	}
+	refList = (void**) realloc(refList, capacity * sizeof(void*));
 	for (int i = size; i < capacity; i++) {
-		newRefList[i] = NULL;
+		refList[i] = NULL;
 	}
-	free(refList);
-	refList = newRefList;
 }
 
 /**
@@ -180,7 +175,6 @@ void tacSetLabel(TAC* tac, char* label) {
 	insertIntoRefList(label);
 }
 
-
 void tacSetOp1(TAC* tac, char* op1) {
 	tac->op1 = op1;
 	insertIntoRefList(op1);
@@ -199,6 +193,11 @@ void tacSetOper(TAC* tac, char* oper) {
 void tacSetRes(TAC* tac, char* res) {
 	tac->result = res;
 	insertIntoRefList(res);
+}
+
+
+char* tacGetLabel(TAC* tac) {
+	return tac->label;
 }
 
 char* tacGetOp1(TAC* tac) {

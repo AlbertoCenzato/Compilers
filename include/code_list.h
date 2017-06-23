@@ -29,6 +29,29 @@ int listLength(CodeList *list);
 int listIsEmpty(CodeList *list);
 
 /**
+ * \returns true if iterator has not reached 
+ *				the end of the list
+ */
+int listHasNext(CodeList* list);
+
+/**
+ *	\brief Returns the next element in the list
+ *			 and advances the list iterator by one
+ */
+TAC* listGetNext(CodeList* list);
+
+/**
+ *	\brief Sets the iterator to list head
+ */
+void listBegin(CodeList* list);
+
+/**
+ * \brief Sets the iterator to list end
+ * \return list tail
+ */
+//void listEnd(CodeList* list);
+
+/**
  *	\brief Returns the three address code at the head of the list
  */
 TAC* listGetFirst(CodeList* list);
