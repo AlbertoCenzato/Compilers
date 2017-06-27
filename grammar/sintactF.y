@@ -2,6 +2,9 @@
 #include <ctype.h> 
 #include <stdio.h> 
 
+extern FILE* yyin;
+extern FILE* yyout;
+
 int yylex();
 void yyerror(char *s);
 
@@ -54,7 +57,7 @@ void yyerror(char *s);
 
 %%
 
-program : block END_OF_FILE { bkndPrintToC($1); 
+program : block END_OF_FILE { bkndPrintToC($1, yyout); 
 										return 0; }
 
 block : block statement	{ ctrlBackpatch($1, $2);
@@ -110,7 +113,20 @@ assign : ID '=' expr  ';' { Fract* fr = getFractVar($1);
        ;
 %%
 
-int main() {
+int main(int argc, char **argv) {
+
+	if (argc < 2) {
+		printf("Wrong arguments number!\n");
+		printf("Usage: f_compiler input_f_file [output_c_file]\n");
+		return 0;
+	}
+
+	yyin = fopen(argv[1], "r");
+
+	if (argc > 2) {
+		yyout = fopen(argv[2], "w");
+	}
+
 	if (yyparse() != 0) 
 		fprintf(stderr, "%s\n\n", "Abnormal exit.");
 
