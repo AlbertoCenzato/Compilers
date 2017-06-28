@@ -20,7 +20,7 @@ id			[A-Za-z]([A-Za-z]|[0-9]|_)*
 relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
 
-%s blockcomment
+%x blockcomment
 
 %%
 
@@ -47,9 +47,10 @@ while				 { return WHILE; }
 "||"			{ return OR;  }
 "!"		   { return NOT; }
 
-\/\*						{ BEGIN blockcomment; }
-<blockcomment>\*\/	{ BEGIN 0; }
+"/*"						{ BEGIN(blockcomment); }
+<blockcomment>"*/"	{ BEGIN(0); }
 <blockcomment>.|\n	{ ; }
+
 
 <<EOF>>		{ return END_OF_FILE; }
 
