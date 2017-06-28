@@ -8,20 +8,23 @@
 
 extern YYSTYPE yylval;
 
-//int mCDflex(int n1, int n2);
-//void reduceFract(char *text, int len);
 %}
 
-ws			[ \t\r\n]
+ws						[ \t\r\n]
+linecomment			"//".*
+
 number 	[0-9]+
 fract  	"["([ ])*{number}([ ])*"|"([ ])*{number}([ ])*"]"
 id			[A-Za-z]([A-Za-z]|[0-9]|_)*
 
 relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
+
+%s blockcomment
+
 %%
 
-{ws}			    { ; }
+{ws}|{linecomment}	{ ; }
 
 bool				 { yylval.str = strdup(yytext); return KW_BOOL;  }
 fract				 { yylval.str = strdup(yytext); return KW_FRACT; }
@@ -44,19 +47,15 @@ while				 { return WHILE; }
 "||"			{ return OR;  }
 "!"		   { return NOT; }
 
+\/\*						{ BEGIN blockcomment; }
+<blockcomment>\*\/	{ BEGIN 0; }
+<blockcomment>.|\n	{ ; }
+
 <<EOF>>		{ return END_OF_FILE; }
 
 .	 			{ return yytext[0]; }
 
 %%
-
-/*
-int main() { 
-	if (yyparse() != 0)
-		fprintf(stderr, " Abnormal exit\n" ); 
-	return 0;
-}
-*/
 
 void yyerror(char *s) { 
 	fprintf(stderr, " Error: %s\n ", s);
