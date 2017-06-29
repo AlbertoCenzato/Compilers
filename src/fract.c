@@ -16,6 +16,7 @@ int mCD(int n1, int n2) {
 		return mCD(n2, n1%n2);
 }
 
+//da mettere alla fine per i programmi compilati
 int signmCD(int n1, int n2){
     if (n2<0)
        return -(mCD(n1,n2));
@@ -54,13 +55,8 @@ Fract fractLexicalAnalysis(char *text, int len) {
 		return fract;
 	}
 
-	int m = mCD(num, den);	// reduce num and den
-
-	num = num / m;
-	den = den / m;
-
-    //force num to be negative
-    if(num>0 && den<0){
+ //force num to be negative
+    if( num > 0 && den < 0){
         num=-num;
         den=abs(den);
     }
@@ -69,6 +65,12 @@ Fract fractLexicalAnalysis(char *text, int len) {
         num=abs(num);
         den=abs(den);
     }
+
+	int m = mCD(num, den);	// reduce num and den
+
+	num = num / m;
+	den = den / m;
+
 
 	int numDigits = 0;
 	for (int tmp = num; tmp > 0; tmp = tmp / 10) {
