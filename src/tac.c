@@ -62,10 +62,8 @@ void insertIntoRefList(void* ptr) {
 		return;
 
 	// if refList has reached its maximum capacity expand it
-	if (size == capacity) {
-		printf("Size == capacity, expanding refList\n");
+	if (size == capacity)
 		expandRefList();
-	}
 
 	// if ptr is already present no action needed
 	int index = findInRefList(ptr);

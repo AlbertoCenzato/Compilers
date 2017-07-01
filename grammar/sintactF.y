@@ -1,12 +1,14 @@
 %{
 #include <ctype.h> 
-#include <stdio.h> 
+#include <stdio.h>
 
 extern FILE* yyin;
 extern FILE* yyout;
 
 int yylex();
 void yyerror(char *s);
+
+int lineCount = 0;
 
 %}
 
@@ -60,9 +62,11 @@ void yyerror(char *s);
 program : block END_OF_FILE { bkndPrintToC($1, yyout); 
 										return 0; }
 
-block : block statement	{ ctrlBackpatch($1, $2);
-								  $$ = listConcat($1, $2); }
-		| statement			{ $$ = $1; }
+block : block statement		{ ctrlBackpatch($1, $2);
+									  $$ = listConcat($1, $2); }
+		| block error ';'		{ printf("statement error at line %d!\n", lineCount); yyerrok; $$ = $1;  }
+		| statement				{ $$ = $1; }
+		| error ';'				{ printf("statement error at line %d!\n", lineCount); yyerrok; $$ = listAlloc(); }
 		;
 
 statement : WHILE '(' bexpr ')' '{' block '}'							{ $$ = ctrlGenWhile($3,$6); }
@@ -71,6 +75,8 @@ statement : WHILE '(' bexpr ')' '{' block '}'							{ $$ = ctrlGenWhile($3,$6); 
 			 | IF		'(' bexpr ')' '{' block '}' ELSE '{' block '}'	{ $$ = ctrlGenIfElse($3,$6,$10); }
 			 | declar																{ $$ = $1; }
 			 | assign																{ $$ = $1; }
+			 | WHILE error '}'	{ printf("while error at line %d!\n", lineCount); yyerrok; $$ = listAlloc();  }
+			 | IF error '}'		{ printf("if error at line %d!\n", lineCount); yyerrok; $$ = listAlloc();  }
 			 ;
 
 // TODO: risolvere problema di type checking

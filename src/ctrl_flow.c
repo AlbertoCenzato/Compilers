@@ -22,6 +22,9 @@ void patchTAC(TAC *tac, char *label) {
 
 void ctrlBackpatch(CodeList* unlabeledInstructions, CodeList* followingInstructions) {
 
+	if (listIsEmpty(followingInstructions))
+		return;
+
 	CodeList* nextList = listGetNextList(unlabeledInstructions);
 	if (listIsEmpty(nextList))
 		return;

@@ -7,24 +7,25 @@
 #include "fract.h"
 
 extern YYSTYPE yylval;
+extern int lineCount;
 
 %}
 
-ws						[ \t\r\n]
-linecomment			"//".*
+ws				 [ \t\r]
+linecomment	 "//".*
 
-number 	[0-9]+
-fract  	"["([ ])*{number}([ ])*"|"([ ])*{number}([ ])*"]"
+integer 	(\-)?[0-9]+
+fract  	"["([ ])*{integer}([ ])*"|"([ ])*{integer}([ ])*"]"
 id			[A-Za-z]([A-Za-z]|[0-9]|_)*
-
-relop  	"<"|">"|"=="|"<="|">="|"!="|"&&"|"||"
 
 
 %x blockcomment
 
+
 %%
 
 {ws}|{linecomment}	{ ; }
+"\n"						{ lineCount++; }
 
 bool				 { yylval.str = strdup(yytext); return KW_BOOL;  }
 fract				 { yylval.str = strdup(yytext); return KW_FRACT; }
@@ -49,8 +50,8 @@ while				 { return WHILE; }
 
 "/*"						{ BEGIN(blockcomment); }
 <blockcomment>"*/"	{ BEGIN(0); }
-<blockcomment>.|\n	{ ; }
-
+<blockcomment>.		{ ; }
+<blockcomment>\n		{ lineCount++; }
 
 <<EOF>>		{ return END_OF_FILE; }
 

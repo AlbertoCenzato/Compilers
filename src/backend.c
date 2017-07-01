@@ -25,8 +25,6 @@ void printDeclaration(char* result, FILE *out) {
 }
 
 void printAssignment(char* result, char* op1, char* oper, char* op2, FILE *out) {
-	//if (!alreadyDefined(result))
-	//	fprintf(out, "int ");
 	fprintf(out, "%s", result);
 	if (op1 == NULL && oper == NULL && op2 == NULL) { // it's a declaration
 		return;
@@ -35,13 +33,13 @@ void printAssignment(char* result, char* op1, char* oper, char* op2, FILE *out) 
 	if (op1 != NULL)
 		fprintf(out, "%s", op1);
 	if (oper != NULL)
-		fprintf(out, "%s", oper);
+		fprintf(out, " %s ", oper);
 	if (op2 != NULL)
 		fprintf(out, "%s", op2);
 }
 
 void printMcd(char* result, char* op1, char* op2, FILE *out) {
-	fprintf(out, "%s = mcd(%s, %s)", result, op1, op2);
+	fprintf(out, "%s = signMCD(%s, %s)", result, op1, op2);
 }
 
 void printGoto(char* op2, FILE *out) {
@@ -60,10 +58,7 @@ void bkndPrintTac(TAC* tac, FILE* out) {
 	char* op2	 =	tacGetOp2  (tac);
 
 	if (label != NULL) {
-		if (!alreadyDefined(result)) {
-			fprintf(out, "int %s;\n", result);
-		}
-		fprintf(out, "%s: ", label);
+		fprintf(out, "%s: ;\n", label);
 	}
 	if (result != NULL && !alreadyDefined(result)) {
 		fprintf(out, "int ");
@@ -78,8 +73,6 @@ void bkndPrintTac(TAC* tac, FILE* out) {
 		else
 			printAssignment(result, op1, oper, op2, out);
 	}
-	//else if(op1 == NULL && op2 == NULL)
-	//	printDeclaration(result, out);
 	else
 		printAssignment(result, op1, oper, op2, out);
 
@@ -95,6 +88,15 @@ void printMCD(FILE *out) {
 	fprintf(out, "}\n\n");
 }
 
+void printSignMCD(FILE *out) {
+	fprintf(out, "int signMCD(int n1, int n2) {\n");
+	fprintf(out, "   if (n2 > 0)\n");
+	fprintf(out, "      return abs(mcd(n1, n2));\n");
+	fprintf(out, "   // n2 < 0\n");
+	fprintf(out, "   return -abs(mcd(n1, n2));\n");
+	fprintf(out, "}\n\n");
+}
+
 /**
  *	\brief WARNING! by now this is a destructive call.
  *			 The list is printed and deallocated
@@ -104,6 +106,7 @@ void bkndPrintToC(CodeList* code, FILE *out) {
 	fprintf(out, "#include <stdio.h>\n\n");
 
 	printMCD(out);
+	printSignMCD(out);
 
 	fprintf(out, "int main(int argc, char** argv) {\n");
 
@@ -115,7 +118,7 @@ void bkndPrintToC(CodeList* code, FILE *out) {
 	char *num = fractNumFromList(code);
 	char *den = fractDenFromList(code);
 
-	fprintf(out, "printf(\"[%%d,%%d]\",%s, %s);\nreturn 0;\n}", num, den);
+	fprintf(out, "printf(\"Result: [%%d|%%d]\\n\",%s, %s);\nreturn 0;\n}", num, den);
 
 	listFree(code);
 }
