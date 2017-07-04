@@ -7,6 +7,7 @@
 #include "tac.h"
 #include "code_list.h"
 #include "code_gen.h"
+#include "symbol_table.h"
 
 
 int mCD(int n1, int n2) {
@@ -103,11 +104,16 @@ char* fractDenFromList(CodeList* list) {
 }
 
 
-CodeList* fractGenDecl() {
+CodeList* fractGenDecl(char* id) {
 	CodeList* list = listAlloc();
 	listAddBack(list, genDecl());
 	listAddBack(list, genDecl());
 	
+	addFractVar(id, NULL, NULL);
+	char* t1 = tacGetRes(listGetSecToLast(list));
+	char* t2 = tacGetRes(listGetLast(list));
+	setFractVar(id, t1, t2);
+
 	return list;
 }
 
@@ -124,8 +130,10 @@ CodeList* fractGenLiteral(Fract* fract) {
 	return list;
 }
 
-CodeList* fractGenID(Fract* fract) {
+CodeList* fractGenID(char* id) {
 	CodeList* list = listAlloc();
+
+	Fract* fract = getFractVar(id);
 	
 	TAC*  tac = genAssign(fract->num);
 	listAddBack(list, tac);
@@ -136,9 +144,11 @@ CodeList* fractGenID(Fract* fract) {
 }
 
 // TODO: improve this function
-CodeList* fractGenAssign(Fract* fract, CodeList* list) {
+CodeList* fractGenAssign(char* id, CodeList* list) {
 
 	CodeList* newList = listAlloc();
+
+	Fract* fract = getFractVar(id);
 
 	TAC* tac = tacAlloc();
 	tacSetRes(tac, fract->num);

@@ -32,14 +32,13 @@ char* fractDenFromList(CodeList* list);
 * \brief Generates three address code for the declaration
 *			of a new fract variable
 */
-CodeList* fractGenDecl();
+CodeList* fractGenDecl(char* id);
 
 /**
  *	\brief Generates three address code for the assignment
  *			 of an expression result to the given fract
  */
-CodeList* fractGenAssign(Fract* fract, CodeList* list);
-//CodeList* fractGenAssign(char* num, char* den, CodeList* list);
+CodeList* fractGenAssign(char* id, CodeList* list);
 
 /**
  *	\brief Generates two temporay variables to store numerator
@@ -52,7 +51,7 @@ CodeList* fractGenLiteral(Fract* fract);
  *			 and denominator for a fract identificator already present
  *			 in the symbol table
  */
-CodeList* fractGenID(Fract* fract);
+CodeList* fractGenID(char* id);
 
 /**
  * \brief Generates three address code instructions for addition
